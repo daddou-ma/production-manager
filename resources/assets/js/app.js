@@ -9,6 +9,12 @@ require('./bootstrap');
 
 import VueRouter from 'vue-router'
 
+import { modal } from 'vue-strap'
+import { alert } from 'vue-strap'
+
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+
+//var PulseLoader = require('vue-spinner/src/PulseLoader.vue');
 Vue.use(VueRouter)
 
 var bus = new Vue();
@@ -23,15 +29,25 @@ global.bus = bus;
 
 
 const Exemple = require('./components/Example.vue');
+
 const Client = require('./components/Client/Client.vue');
+const ClientForm = require('./components/Client/ClientForm.vue');
+
 const Provider = require('./components/Provider/Provider.vue');
 const Product = require('./components/Product/Product.vue');
 const Material = require('./components/Material/Material.vue');
 
 const Message =  require('./components/Message.vue');
 
+Vue.component('modal', modal);
+Vue.component('alert', alert);
+Vue.component('pulse-loader', PulseLoader);
+
 Vue.component('example', Exemple);
+
 Vue.component('client', Client);
+Vue.component('client-form', ClientForm);
+
 Vue.component('provider', Provider);
 Vue.component('product', Product);
 Vue.component('material', Material);
@@ -51,5 +67,5 @@ const router = new VueRouter({
 })
 
 const app = new Vue({
-    router
+    router,
 }).$mount('#app');

@@ -1,56 +1,9 @@
 <template>
     <div>
-        <div class="modal fade" id="client-form" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="exampleModalLabel">
-                            <span v-if="newClient">Nouveau Client</span>
-                            <span v-else="newClient">Modifier Client</span>
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="name">Nom complet :</span>
-                                <input type="text" class="form-control" v-model="client.full_name" aria-describedby="name">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NRC :</span>
-                                <input type="text" class="form-control" v-model="client.nrc" aria-describedby="nrc">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NIF :</span>
-                                <input type="text" class="form-control" v-model="client.nif" aria-describedby="nif">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="na">NA :</span>
-                                <input type="text" class="form-control" v-model="client.na" aria-describedby="name">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="address">Address :</span>
-                                <input type="text" class="form-control" v-model="client.address" aria-describedby="address">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="phone">Telephone :</span>
-                                <input type="phone" class="form-control" v-model="client.phone" aria-describedby="phone">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="fax">Fax :</span>
-                                <input type="phone" class="form-control" v-model="client.fax" aria-describedby="fax">
-                            </div><br/>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" v-if="newClient" v-on:click="openConfirmDialogue()">Creer Client</button>
-                        <button type="button" class="btn btn-primary" v-else v-on:click="openConfirmDialogue()">Modifier Client</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <message v-bind:msg="msg" v-on:save="save()"  v-on:update="update()"></message>
+        <button type="button" v-on:click="showModal = !showModal">Show Modal</button>
+        <client-form v-bind:client="client" v-bind:clientForm="form"></client-form>
+        <message v-bind:confirm="confirm"></message>
+
         <div class="panel panel-default">
             <div class="panel-heading">Clients</div>
             <div class="panel-body">
@@ -103,26 +56,26 @@
         data() {
             return {
                 client: {
-                    full_name: '',
-                    nrc: '',
-                    nif: '',
-                    na: '',
-                    address: '',
-                    phone: '',
-                    fax: ''
+                },
+                form : {
+                    title: 'Edit',
+                    content: '',
+                    show: false,
+                    edit: false,
+                    errors: [],
+                    validate: function () {},
+                    cancel: function () {},
+                },
+                confirm : {
+                    title: 'Confirmation',
+                    content: 'Vouler Vous',
+                    success: false,
+                    show: false,
+                    validate: function () {},
+                    cancel: function () {},
                 },
                 clients: [],
-                open: false,
-                newClient: false,
                 apiUrl: 'api/v1',
-                msg: {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
-                    show: false,
-                    title: '',
-                    content: '',
-                },
             }
         },
         mounted() {
@@ -153,7 +106,7 @@
                     console.log(JSON.parse(response.data))
                 });
             },
-            emptyClient () {
+            resetClient(){
                 this.client = {
                     full_name: '',
                     nrc: '',
@@ -174,35 +127,44 @@
                     $('#client-form').modal('hide')
                 }
             },
-            openConfirmDialogue() {
-                bus.$emit('dialog', true)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            closeConfirmDialogue() {
-                bus.$emit('dialog', false)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            create () {
-                this.emptyClient()
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
+            create() {
+                this.resetClient()
+                var self = this
+                this.form = {
+                    title: 'Edit',
+                    content: '',
                     show: true,
-                    title: 'Creer',
-                    content: 'Vouler vous creer le client !'
+                    errors: [],
+                    edit: false,
+                    validate: function () {
+                        console.log('TAG','jebnaha jebnaha')
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Vouler Vous',
+                            loading: false,
+                            success: false,
+                            show: true,
+                            validate: function () {
+                                console.log('TAG','Validate Confirm')
+                                self.save()
+                            },
+                            cancel: function () {
+                                console.log('TAG','cancel Confirm')
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                        console.log('TAG','Baraaa !')
+                    }
                 }
-                this.openDialog(true, true)
+                //this.openDialog(true, true)
             },
-            edit ($client) {
+            edit($client) {
                 this.client = $client
                 this.msg = {
                     loading: false,
@@ -212,28 +174,30 @@
                     title: 'Modifier',
                     content: 'Vouler vous modifier le client ' + this.client.full_name + ' !'
                 }
-                this.openDialog(true, false)
+                this.showModal = true
+                //this.openDialog(true, false)
             },
             save () {
-                this.msg.loading = true
+                this.confirm.loading = true
                 this.$clients.save(this.client).then((response) => {
                     this.client = JSON.parse(response.data)
-                    //TODO
-                    $('#confirm-form').modal('hide');
-                    //TODO
                     console.log(JSON.parse(response.data))
-                    this.msg.loading = false
-                    this.msg.messages = JSON.parse(response.data)
                     this.getClients()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, true)
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        this.form.show = false
+                        this.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
-                    this.msg.loading = false
                     console.log(response.body)
-                    this.msg.messages = response.body
-
+                    this.confirm.loading = false
+                    this.confirm.success = false
+                    this.form.errors = response.body
+                    this.form.show = true
+                    this.confirm.show = false
                 });
             },
             update () {

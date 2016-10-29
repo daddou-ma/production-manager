@@ -1,37 +1,27 @@
 <template>
-    <div class="modal" id="confirm-form" tabindex="1" role="dialog" data-backdrop="static">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Dialogue de Confirmation</h4>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        <span v-if="msg.loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
-                        <span v-else>
-                            <span v-if="msg.messages != null">
-                                <span v-for="msgs in msg.messages">
-                                    <span v-for="message in msgs">
-                                        <div class="alert alert-danger">
-                                            <strong>Erreur</strong> {{ message }}
-                                        </div>
-                                    </span> 
-                                </span>
-                            </span>
-
-                            <span v-else>{{ msg.content }}</span>
-                        </span>
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" v-if="msg.newElement" v-on:click="save()">{{ msg.title }}</button>
-                    <button type="button" class="btn btn-primary" v-else v-on:click="update()">{{ msg.title }}</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    <modal title="Modal" v-bind:show.sync="confirm.show" effect="fade" width="400" v-bind:backdrop="false">
+        <div slot="modal-header" class="modal-header">
+            <h4 class="modal-title">
+                <b>Dialogue de Confirmation</b>
+            </h4>
+         </div>
+        <div slot="modal-body" class="modal-body">
+        <div v-if="!confirm.success">
+            <center>
+                <pulse-loader :loading="confirm.loading"></pulse-loader>
+            </center>
+            <span v-if="!confirm.loading">{{ confirm.content }}</span>
+        </div>
+        <div v-else>
+            <alert type="success"> Le client A ete creer avec success ! </alert>
+        </div>
+            
+        </div>
+        <div slot="modal-footer" class="modal-footer">
+            <button type="button" class="btn btn-default" v-bind:disabled="confirm.loading" @click="confirm.cancel()">Exit</button>
+            <button type="button" class="btn btn-success" v-if="!confirm.success" v-bind:disabled="confirm.loading" @click="confirm.validate()">Custom Save</button>
+        </div>
+    </modal>
 </template>
 
 <script>
@@ -40,7 +30,7 @@
             return {
             }
         },
-        props: ['msg'],
+        props: ['confirm'],
         mounted() {
             console.log('Component ready.')
         },
