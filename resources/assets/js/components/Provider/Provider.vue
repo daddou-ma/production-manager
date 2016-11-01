@@ -1,56 +1,8 @@
 <template>
     <div>
-        <div class="modal fade" id="provider-form" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="exampleModalLabel">
-                            <span v-if="newProvider">Nouveau Provider</span>
-                            <span v-else="newProvider">Modifier Provider</span>
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="name">Nom complet :</span>
-                                <input type="text" class="form-control" v-model="provider.full_name" aria-describedby="name">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NRC :</span>
-                                <input type="text" class="form-control" v-model="provider.nrc" aria-describedby="nrc">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NIF :</span>
-                                <input type="text" class="form-control" v-model="provider.nif" aria-describedby="nif">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="na">NA :</span>
-                                <input type="text" class="form-control" v-model="provider.na" aria-describedby="name">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="address">Address :</span>
-                                <input type="text" class="form-control" v-model="provider.address" aria-describedby="address">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="phone">Telephone :</span>
-                                <input type="phone" class="form-control" v-model="provider.phone" aria-describedby="phone">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="fax">Fax :</span>
-                                <input type="phone" class="form-control" v-model="provider.fax" aria-describedby="fax">
-                            </div><br/>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" v-if="newProvider" v-on:click="openConfirmDialogue()">Creer Provider</button>
-                        <button type="button" class="btn btn-primary" v-else v-on:click="openConfirmDialogue()">Modifier Provider</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <message v-bind:msg="msg" v-on:save="save()"  v-on:update="update()"></message>
+        <provider-form v-bind:provider="provider" v-bind:form="form"></provider-form>
+        <message v-bind:confirm="confirm"></message>
+
         <div class="panel panel-default">
             <div class="panel-heading">Providers</div>
             <div class="panel-body">
@@ -87,7 +39,7 @@
                         <td>{{ provider.fax }}</td>
                         <td>
                             <a class="btn btn-default btn-xs" v-on:click="edit(provider)">Modifier</a>
-                            <a class="btn btn-danger btn-xs" v-on:click="destroy(provider)">
+                            <a class="btn btn-danger btn-xs" v-on:click="_delete(provider)">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a>
                         </td>
@@ -103,26 +55,31 @@
         data() {
             return {
                 provider: {
-                    full_name: '',
-                    nrc: '',
-                    nif: '',
-                    na: '',
-                    address: '',
-                    phone: '',
-                    fax: ''
                 },
-                providers: [],
-                open: false,
-                newProvider: false,
-                apiUrl: 'api/v1',
-                msg: {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
-                    show: false,
+                form : {
                     title: '',
                     content: '',
+                    validBtn: '',
+                    classBtn: '',
+                    show: false,
+                    edit: false,
+                    validate: function () {},
+                    cancel: function () {},
                 },
+                confirm : {
+                    title: '',
+                    content: '',
+                    validBtn: '',
+                    classBtn: '',
+                    success: false,
+                    error: false,
+                    errors: [],
+                    show: false,
+                    validate: function () {},
+                    cancel: function () {},
+                },
+                providers: [],
+                apiUrl: 'api/v1',
             }
         },
         mounted() {
@@ -153,7 +110,7 @@
                     console.log(JSON.parse(response.data))
                 });
             },
-            emptyProvider () {
+            resetProvider(){
                 this.provider = {
                     full_name: '',
                     nrc: '',
@@ -164,104 +121,157 @@
                     fax: ''
                 }
             },
-            openDialog ($open, $new) {
-                this.open = $open
-                this.newProvider = $new  
-                if (this.open) {
-                    $('#provider-form').modal('show')
-                }
-                else {
-                    $('#provider-form').modal('hide')
-                }
-            },
-            openConfirmDialogue() {
-                bus.$emit('dialog', true)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            closeConfirmDialogue() {
-                bus.$emit('dialog', false)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            create () {
-                this.emptyProvider()
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
+            create() {
+                this.resetProvider()
+                var self = this
+                this.form = {
+                    title: 'Nouveau Provider',
+                    content: 'Remplisez le formulaire',
+                    validBtn: 'Creer le Provider',
+                    classBtn: 'btn-success',
                     show: true,
-                    title: 'Creer',
-                    content: 'Vouler vous creer le provider !'
+                    validate: function () {
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Voulez-vous creer le provider : ' + self.provider.full_name,
+                            validBtn: 'Creer le Provider',
+                            classBtn: 'btn-success',
+                            loading: false,
+                            success: false,
+                            error: false,
+                            errors: [],
+                            show: true,
+                            validate: function () {
+                                self.save()
+                            },
+                            cancel: function () {
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
                 }
-                this.openDialog(true, true)
             },
-            edit ($provider) {
+            edit($provider) {
                 this.provider = $provider
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: false,
+                var self = this
+                this.form = {
+                    title: 'Modifier le provider :' + self.provider.full_name,
+                    content: 'Modifier Les champs',
+                    validBtn: 'Modifier le Provider',
+                    classBtn: 'btn-primary',
                     show: true,
-                    title: 'Modifier',
-                    content: 'Vouler vous modifier le provider ' + this.provider.full_name + ' !'
+                    errors: [],
+                    validate: function () {
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Voulez-vous modifier le provider : ' + self.provider.full_name,
+                            validBtn: 'Modifier le Provider',
+                            classBtn: 'btn-primary',
+                            loading: false,
+                            success: false,
+                            show: true,
+                            validate: function () {
+                                self.update()
+                            },
+                            cancel: function () {
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
                 }
-                this.openDialog(true, false)
+            },
+            _delete ($provider) {
+                this.provider = $provider
+                var self = this
+                this.confirm = {
+                    title: 'Confirmation',
+                    content: 'Voulez-vous supprimer le provider : ' + self.provider.full_name,
+                    validBtn: 'Supprimer le Provider',
+                    classBtn: 'btn-danger',
+                    loading: false,
+                    success: false,
+                    show: true,
+                    validate: function () {
+                        self.destroy()
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
+                }
             },
             save () {
-                this.msg.loading = true
+                var self = this
+                this.confirm.loading = true
                 this.$providers.save(this.provider).then((response) => {
                     this.provider = JSON.parse(response.data)
-                    //TODO
-                    $('#confirm-form').modal('hide');
-                    //TODO
                     console.log(JSON.parse(response.data))
-                    this.msg.loading = false
-                    this.msg.messages = JSON.parse(response.data)
                     this.getProviders()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, true)
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        self.form.show = false
+                        self.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
-                    this.msg.loading = false
                     console.log(response.body)
-                    this.msg.messages = response.body
-
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                 });
             },
             update () {
-                this.msg.loading = true
+                var self = this
+                this.confirm.loading = true
                 this.$providers.update({id: this.provider.id},this.provider).then((response) => {
                     //this.provider = JSON.parse(response.data)
                     //TODO
-                    console.log(response.data)
-                    this.msg.loading = false
-                    this.getProviders()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, false)
-                },
-                (response) => {
-                    //TODO
-                    this.msg.loading = false
-                    console.log(response.body)
-                });
-            },
-            destroy ($provider) {
-                console.log("deleted ?")
-                this.$providers.delete({id: $provider.id}).then((response) => {
-                    //TODO
+                    this.provider = JSON.parse(response.data)
                     console.log(JSON.parse(response.data))
                     this.getProviders()
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        self.form.show = false
+                        self.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
+                    console.log(response.body)
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
+                });
+            },
+            destroy () {
+                var self = this
+                this.confirm.loading = true
+                this.$providers.delete({id: this.provider.id}).then((response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.getProviders()
+                    console.log(JSON.parse(response.data))
+                },
+                (response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                     console.log(response.body)
                 });
             },

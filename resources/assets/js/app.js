@@ -40,6 +40,8 @@ const Client = require('./components/Client/Client.vue');
 const ClientForm = require('./components/Client/ClientForm.vue');
 
 const Provider = require('./components/Provider/Provider.vue');
+const ProviderForm = require('./components/Provider/ProviderForm.vue');
+
 const Product = require('./components/Product/Product.vue');
 const Material = require('./components/Material/Material.vue');
 
@@ -59,6 +61,8 @@ Vue.component('client', Client);
 Vue.component('client-form', ClientForm);
 
 Vue.component('provider', Provider);
+Vue.component('provider-form', ProviderForm);
+
 Vue.component('product', Product);
 Vue.component('material', Material);
 

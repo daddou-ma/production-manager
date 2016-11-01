@@ -1,5 +1,5 @@
 <template>
-    <modal title="Modal" v-bind:show.sync="confirm.show" effect="fade" width="400" v-bind:backdrop="false">
+    <modal title="Modal" v-bind:show="confirm.show" effect="fade" width="400" v-bind:backdrop="false">
         <div slot="modal-header" class="modal-header">
             <h4 class="modal-title">
                 <b>Dialogue de Confirmation</b>

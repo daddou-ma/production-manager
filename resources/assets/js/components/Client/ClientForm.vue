@@ -48,10 +48,12 @@
                     </form>
                 </div>
                 <div class="tab-pane section" id="delivery">
-                    <div  v-for="delivery in client.deliveries" class="panel panel-default">
+                    <div v-for="delivery in client.deliveries" class="panel panel-default">
                         <div class="panel-body">
                             <span class="label label-default">{{ delivery.id }}</span>
-                            <span>{{ delivery.product.name }}</span>
+                            <li v-for="product in delivery.products">
+                                <span>{{ product.name }}</span>
+                            </li>
                         </div>
                     </div>
                 </div>

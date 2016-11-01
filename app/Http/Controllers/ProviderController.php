@@ -20,7 +20,7 @@ class ProviderController extends Controller
     public function index()
     {
         //
-        $providers = Provider::with(['commands'])->ordered()->get();
+        $providers = Provider::with(['commands.materials'])->ordered()->get();
 
         return $providers->toJson();
     }
@@ -66,7 +66,7 @@ class ProviderController extends Controller
     public function show($id)
     {
         //
-        $providers = Provider::with(['commands'])->find($id);
+        $providers = Provider::with(['commands.materials'])->find($id);
 
         return $providers->toJson();
     }
@@ -92,7 +92,8 @@ class ProviderController extends Controller
     public function update(ProviderRequest $request, $id)
     {
         //
-        $provider = Provider::find($id)->update($request->all());
+        $provider = Provider::find($id);
+        $provider->update($request->all());
         return $provider->toJson();
     }
 
