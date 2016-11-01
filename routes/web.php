@@ -20,4 +20,9 @@ Route::group(['prefix' => 'api/v1'], function() {
 	Route::resource('providers', 'ProviderController');
 	Route::resource('products',  'ProductController');
 	Route::resource('materials',  'MaterialController');
+
+	Route::resource('products.materials',	 'MaterialController');
+	Route::resource('commands', 'CommandController');
+	Route::resource('fabrications',  'FabricationController');
+	Route::resource('deliveries',  'DeliveryController');
 });

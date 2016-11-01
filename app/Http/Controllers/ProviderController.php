@@ -93,6 +93,7 @@ class ProviderController extends Controller
     {
         //
         $provider = Provider::find($id)->update($request->all());
+        return $provider->toJson();
     }
 
     /**

@@ -1,6 +1,8 @@
 
+$border-radius-base: 0px;
+
 // Body
-$body-bg: #f5f8fa;
+$body-bg: #AAA;
 
 // Borders
 $laravel-border-color: darken($body-bg, 10%);
@@ -35,3 +37,16 @@ $input-color-placeholder: lighten($text-color, 30%);
 
 // Panels
 $panel-default-heading-bg: #fff;
+
+// Navs
+
+// Pills
+$nav-pills-border-radius: 0px;
+$nav-pills-active-link-hover-bg: #f3f0f0;
+$nav-pills-active-link-hover-color: #345;
+
+// Tabs
+$nav-tabs-border-radius: 0px;
+$nav-tabs-active-link-hover-bg: #f3f0f0;
+$nav-tabs-active-link-hover-color: #345;
+$nav-tabs-border-color:

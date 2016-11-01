@@ -20,7 +20,7 @@ class MaterialController extends Controller
     public function index()
     {
         //
-        $materials = Material::with('commands.provider','components.material')->ordered()->get();
+        $materials = Material::with('commands.provider')->ordered()->get();
 
         return $materials->toJson();
     }
@@ -66,7 +66,7 @@ class MaterialController extends Controller
     public function show($id)
     {
         //
-        $materials = Material::with(['commands.provider','components.material'])->find($id);
+        $materials = Material::with(['commands.provider'])->find($id);
 
         return $materials->toJson();
     }
@@ -93,6 +93,7 @@ class MaterialController extends Controller
     {
         //
         $material = Material::find($id)->update($request->all());
+        return $material->toJson();
     }
 
     /**

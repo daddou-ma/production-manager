@@ -14,4 +14,14 @@ class Fabrication extends Model
 	public function product() {
 		return $this->belongsTo('App\Product');
 	}
+
+	public function scopeOrdered($query)
+	{
+	    if ($this->orderBy)
+	    {
+	        return $query->orderBy($this->orderBy, $this->orderDirection);
+	    }
+
+	    return $query;
+	}
 }

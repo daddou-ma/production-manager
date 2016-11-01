@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::with(['fabrications.product','fabrications.product','deliveries.product','deliveries.product','components.material'])->ordered()->get();
+        $products = Product::with(['fabrications','deliveries','materials'])->ordered()->get();
 
         return $products->toJson();
     }
@@ -66,7 +66,7 @@ class ProductController extends Controller
     public function show($id)
     {
         //
-        $products = Product::with(['fabrications.product','fabrications.product','deliveries.product','deliveries.product','components.material'])->find($id);
+        $products = Product::with(['fabrications.product','fabrications.product','deliveries.product','deliveries.product','materials'])->find($id);
 
         return $products->toJson();
     }
@@ -93,6 +93,7 @@ class ProductController extends Controller
     {
         //
         $product = Product::find($id)->update($request->all());
+        return $products->toJson();
     }
 
     /**

@@ -20,7 +20,7 @@ class ClientController extends Controller
     public function index()
     {
         //
-        $clients = Client::with(['fabrications.product','fabrications.client','deliveries.client','deliveries.product'])->ordered()->get();
+        $clients = Client::with(['deliveries.product'])->ordered(true)->get();
 
         return $clients->toJson();
     }
@@ -92,7 +92,9 @@ class ClientController extends Controller
     public function update(ClientRequest $request, $id)
     {
         //
-        $client = Client::find($id)->update($request->all());
+        $client = Client::find($id);
+        $client->update($request->all());
+        return $client->toJson();
     }
 
     /**

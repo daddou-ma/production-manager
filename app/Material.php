@@ -13,12 +13,14 @@ class Material extends Model
 	protected $orderBy = 'created_at';
 	protected $orderDirection = 'DESC';
 
-    public function components() {
-		return $this->hasMany('App\Component');
+    public function products() {
+		//return $this->hasMany('App\Component');
+		return $this->belongsToMany('App\Product', 'material_product')
+		->withPivot('quantity');
 	}
 
 	public function commands() {
-		return $this->hasMany('App\Command');
+		return $this->hasMany('App\Command', 'material_command');
 	}
 
 	public function scopeOrdered($query)

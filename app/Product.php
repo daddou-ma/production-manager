@@ -13,8 +13,10 @@ class Product extends Model
 	protected $orderBy = 'created_at';
 	protected $orderDirection = 'DESC';
 
-    public function components() {
-		return $this->hasMany('App\Component');
+    public function materials() {
+		//return $this->hasMany('App\ProductMaterial');
+		return $this->belongsToMany('App\Material', 'material_product')
+		->withPivot('quantity');
 	}
 
 	public function fabrications() {
@@ -22,7 +24,7 @@ class Product extends Model
 	}
 
 	public function deliveries() {
-		return $this->hasMany('App\Delivery');
+		return $this->belongsToMany('App\Delivery', 'product_delivery');
 	}
 
 	public function scopeOrdered($query)

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
+    "vee-validate": "^2.0.0-beta.13",
     "vue-modal-plugin": "^0.1.1",
     "vue-router": "^2.0.1",
     "vue-spinner": "^1.0.2",

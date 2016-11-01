@@ -6,20 +6,33 @@
             </h4>
          </div>
         <div slot="modal-body" class="modal-body">
-        <div v-if="!confirm.success">
+        <div v-if="confirm.loading">
             <center>
                 <pulse-loader :loading="confirm.loading"></pulse-loader>
             </center>
-            <span v-if="!confirm.loading">{{ confirm.content }}</span>
         </div>
         <div v-else>
-            <alert type="success"> Le client A ete creer avec success ! </alert>
+            <div v-if="confirm.success">
+                <alert type="success"> L'operation a ete faite avec success ! </alert>
+            </div>
+            <div v-else>
+                <div v-if="confirm.error">
+                    <alert type="danger" v-for="(msgs,field) in confirm.errors">
+                        <span v-for="msg in msgs"><b>{{ field }} : </b>{{ msg }}</span><br>
+                    </alert>
+                </div>
+                <div v-else>
+                    <span else>{{ confirm.content }}</span>
+                </div>
+            </div>            
         </div>
             
         </div>
         <div slot="modal-footer" class="modal-footer">
-            <button type="button" class="btn btn-default" v-bind:disabled="confirm.loading" @click="confirm.cancel()">Exit</button>
-            <button type="button" class="btn btn-success" v-if="!confirm.success" v-bind:disabled="confirm.loading" @click="confirm.validate()">Custom Save</button>
+            <button type="button" class="btn btn-sm btn-default" v-bind:disabled="confirm.loading" @click="confirm.cancel()">Fermer</button>
+            <button type="button" class="btn btn-sm" v-if="!confirm.success && !confirm.error" v-bind:class="confirm.classBtn" v-bind:disabled="confirm.loading" @click="confirm.validate()">
+                {{ confirm.validBtn }} 
+            </button>
         </div>
     </modal>
 </template>
@@ -32,27 +45,12 @@
         },
         props: ['confirm'],
         mounted() {
-            console.log('Component ready.')
+            console.log('Message Component ready.')
         },
         created() {
-            bus.$on('dialog', function(show) {
-                console.log('msssssg')
-                if (show) {
-                   $('#confirm-form').modal('show') 
-                }
-                else {
-                   $('#confirm-form').modal('hide') 
-                }
-                
-            })
+            
         },
         methods: {
-            save() {
-                this.$emit('save');
-            },
-            update() {
-                this.$emit('update');
-            }
         }
     }
 </script>

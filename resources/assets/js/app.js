@@ -8,13 +8,19 @@
 require('./bootstrap');
 
 import VueRouter from 'vue-router'
+import VeeValidate from 'vee-validate'
+
 
 import { modal } from 'vue-strap'
 import { alert } from 'vue-strap'
+import { tabset } from 'vue-strap'
+import { tab } from 'vue-strap'
+import { tabGroup } from 'vue-strap'
+
 
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
-//var PulseLoader = require('vue-spinner/src/PulseLoader.vue');
+Vue.use(VeeValidate);
 Vue.use(VueRouter)
 
 var bus = new Vue();
@@ -41,6 +47,10 @@ const Message =  require('./components/Message.vue');
 
 Vue.component('modal', modal);
 Vue.component('alert', alert);
+Vue.component('tabs', tabset);
+Vue.component('tab-group', tabGroup);
+Vue.component('tab', tab);
+
 Vue.component('pulse-loader', PulseLoader);
 
 Vue.component('example', Exemple);

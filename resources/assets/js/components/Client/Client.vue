@@ -1,7 +1,6 @@
 <template>
     <div>
-        <button type="button" v-on:click="showModal = !showModal">Show Modal</button>
-        <client-form v-bind:client="client" v-bind:clientForm="form"></client-form>
+        <client-form v-bind:client="client" v-bind:form="form"></client-form>
         <message v-bind:confirm="confirm"></message>
 
         <div class="panel panel-default">
@@ -40,7 +39,7 @@
                         <td>{{ client.fax }}</td>
                         <td>
                             <a class="btn btn-default btn-xs" v-on:click="edit(client)">Modifier</a>
-                            <a class="btn btn-danger btn-xs" v-on:click="destroy(client)">
+                            <a class="btn btn-danger btn-xs" v-on:click="_delete(client)">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a>
                         </td>
@@ -58,18 +57,23 @@
                 client: {
                 },
                 form : {
-                    title: 'Edit',
+                    title: '',
                     content: '',
+                    validBtn: '',
+                    classBtn: '',
                     show: false,
                     edit: false,
-                    errors: [],
                     validate: function () {},
                     cancel: function () {},
                 },
                 confirm : {
-                    title: 'Confirmation',
-                    content: 'Vouler Vous',
+                    title: '',
+                    content: '',
+                    validBtn: '',
+                    classBtn: '',
                     success: false,
+                    error: false,
+                    errors: [],
                     show: false,
                     validate: function () {},
                     cancel: function () {},
@@ -117,41 +121,32 @@
                     fax: ''
                 }
             },
-            openDialog ($open, $new) {
-                this.open = $open
-                this.newClient = $new  
-                if (this.open) {
-                    $('#client-form').modal('show')
-                }
-                else {
-                    $('#client-form').modal('hide')
-                }
-            },
             create() {
                 this.resetClient()
                 var self = this
                 this.form = {
-                    title: 'Edit',
-                    content: '',
+                    title: 'Nouveau Client',
+                    content: 'Remplisez le formulaire',
+                    validBtn: 'Creer le Client',
+                    classBtn: 'btn-success',
                     show: true,
-                    errors: [],
-                    edit: false,
                     validate: function () {
-                        console.log('TAG','jebnaha jebnaha')
                         var form = this
                         this.show = false
                         self.confirm = {
                             title: 'Confirmation',
-                            content: 'Vouler Vous',
+                            content: 'Voulez-vous creer le client : ' + self.client.full_name,
+                            validBtn: 'Creer le Client',
+                            classBtn: 'btn-success',
                             loading: false,
                             success: false,
+                            error: false,
+                            errors: [],
                             show: true,
                             validate: function () {
-                                console.log('TAG','Validate Confirm')
                                 self.save()
                             },
                             cancel: function () {
-                                console.log('TAG','cancel Confirm')
                                 this.show = false
                                 form.show = true
                             }
@@ -159,25 +154,65 @@
                     },
                     cancel: function () {
                         this.show = false
-                        console.log('TAG','Baraaa !')
                     }
                 }
-                //this.openDialog(true, true)
             },
             edit($client) {
                 this.client = $client
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: false,
+                var self = this
+                this.form = {
+                    title: 'Modifier le client :' + self.client.full_name,
+                    content: 'Modifier Les champs',
+                    validBtn: 'Modifier le Client',
+                    classBtn: 'btn-primary',
                     show: true,
-                    title: 'Modifier',
-                    content: 'Vouler vous modifier le client ' + this.client.full_name + ' !'
+                    errors: [],
+                    validate: function () {
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Voulez-vous modifier le client : ' + self.client.full_name,
+                            validBtn: 'Modifier le Client',
+                            classBtn: 'btn-primary',
+                            loading: false,
+                            success: false,
+                            show: true,
+                            validate: function () {
+                                self.update()
+                            },
+                            cancel: function () {
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
                 }
-                this.showModal = true
-                //this.openDialog(true, false)
+            },
+            _delete ($client) {
+                this.client = $client
+                var self = this
+                this.confirm = {
+                    title: 'Confirmation',
+                    content: 'Voulez-vous supprimer le client : ' + self.client.full_name,
+                    validBtn: 'Supprimer le Client',
+                    classBtn: 'btn-danger',
+                    loading: false,
+                    success: false,
+                    show: true,
+                    validate: function () {
+                        self.destroy()
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
+                }
             },
             save () {
+                var self = this
                 this.confirm.loading = true
                 this.$clients.save(this.client).then((response) => {
                     this.client = JSON.parse(response.data)
@@ -186,46 +221,57 @@
                     this.confirm.loading = false
                     this.confirm.success = true
                     this.confirm.cancel = function() {
-                        this.form.show = false
-                        this.confirm.show = false
+                        self.form.show = false
+                        self.confirm.show = false
                     }
                 },
                 (response) => {
                     //TODO
                     console.log(response.body)
                     this.confirm.loading = false
-                    this.confirm.success = false
-                    this.form.errors = response.body
-                    this.form.show = true
-                    this.confirm.show = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                 });
             },
             update () {
-                this.msg.loading = true
+                var self = this
+                this.confirm.loading = true
                 this.$clients.update({id: this.client.id},this.client).then((response) => {
                     //this.client = JSON.parse(response.data)
                     //TODO
-                    console.log(response.data)
-                    this.msg.loading = false
-                    this.getClients()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, false)
-                },
-                (response) => {
-                    //TODO
-                    this.msg.loading = false
-                    console.log(response.body)
-                });
-            },
-            destroy ($client) {
-                console.log("deleted ?")
-                this.$clients.delete({id: $client.id}).then((response) => {
-                    //TODO
+                    this.client = JSON.parse(response.data)
                     console.log(JSON.parse(response.data))
                     this.getClients()
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        self.form.show = false
+                        self.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
+                    console.log(response.body)
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
+                });
+            },
+            destroy () {
+                var self = this
+                this.confirm.loading = true
+                this.$clients.delete({id: this.client.id}).then((response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.getClients()
+                    console.log(JSON.parse(response.data))
+                },
+                (response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                     console.log(response.body)
                 });
             },
