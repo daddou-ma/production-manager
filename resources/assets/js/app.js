@@ -97,6 +97,7 @@ Vue.component('message', Message);
 
 
 const routes = [
+  	{ path: '/', component: Client },
   	{ path: '/clients', component: Client },
   	{ path: '/providers', component: Provider },
   	{ path: '/products', component: Product },

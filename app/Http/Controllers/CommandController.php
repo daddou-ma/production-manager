@@ -53,11 +53,21 @@ class CommandController extends Controller
         $ids = array();
 
         foreach ($materials as $material) {
-            # code...
-            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
-            $ids[$material['id']] = ['quantity' => $material['pivot']['quantity'],
+            $mat = Material::find($material['id']);
+            if ($mat->quantity < $material['pivot']['quantity']) {
+                $quantity = $mat->quantity;
+            }
+            else {
+                $quantity = $material['pivot']['quantity'];
+            }
+            
+            $ids[$material['id']] = ['quantity' => $quantity,
                 'price' => $material['pivot']['price']
             ];
+            
+            $mat->quantity = $mat->quantity - $quantity;
+            $mat->save();
+
         }
         
         $command->materials()->sync($ids);
@@ -115,13 +125,19 @@ class CommandController extends Controller
         $command->materials()->detach();
 
         foreach ($materials as $material) {
-            # code...
-            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
-            $ids[$material['id']] = ['quantity' => $material['pivot']['quantity'],
+            $mat = Material::find($material['id']);
+            if ($mat->quantity < $material['pivot']['quantity']) {
+                $quantity = $mat->quantity;
+            }
+            else {
+                $quantity = $material['pivot']['quantity'];
+            }
+            
+            $ids[$material['id']] = ['quantity' => $quantity,
                 'price' => $material['pivot']['price']
             ];
-            $mat = Material::find($material['id']);
-            $mat->quantity = $mat->quantity - $material['pivot']['quantity'];
+            
+            $mat->quantity = $mat->quantity - $quantity;
             $mat->save();
         }
         $command->materials()->attach($ids);

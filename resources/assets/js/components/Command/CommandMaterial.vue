@@ -22,12 +22,23 @@
             </select>
             <span class="input-group-btn"></span>
             <input type="number" class="form-control" placeholder="quantity" v-model="quantity">
+            <span class="input-group-addon">kg</span>
            	<span class="input-group-btn"></span>
 		    <input type="number" class="form-control" placeholder="price" v-model="price">
+            <span class="input-group-addon">DA/kg</span>
+            <span class="input-group-btn"></span>
+            <span class="input-group-addon">Total : 
+                {{ quantity * price }} DA
+            </span>
 	    	<span class="input-group-btn">
 		        <button class="btn btn-success" type="button" v-on:click="add()">Ajouter!</button>
 		    </span>
 	    </div>
+        <div v-if="material">
+            <b>Matiere : </b>{{ material.name }}<br>
+            <b>Quantite Disponible: </b>{{ material.quantity }}<br>
+            <b>Prix Unitaire : </b>{{ material.unite_price }}<br>
+        </div>
 	</div>
 </template>
 
