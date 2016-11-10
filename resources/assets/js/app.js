@@ -18,7 +18,7 @@ import { datepicker } from 'vue-strap'
 
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
-Vue.use(VeeValidate);
+Vue.use(VeeValidate)
 Vue.use(VueRouter)
 
 Vue.http.options.root = 'http://gestion-pro.herokuapp.com/public/'
