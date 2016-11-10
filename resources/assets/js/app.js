@@ -13,10 +13,8 @@ import VeeValidate from 'vee-validate'
 
 import { modal } from 'vue-strap'
 import { alert } from 'vue-strap'
-import { tabset } from 'vue-strap'
-import { tab } from 'vue-strap'
-import { tabGroup } from 'vue-strap'
-
+import { progressbar } from 'vue-strap'
+import { datepicker } from 'vue-strap'
 
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
@@ -43,15 +41,29 @@ const Provider = require('./components/Provider/Provider.vue');
 const ProviderForm = require('./components/Provider/ProviderForm.vue');
 
 const Product = require('./components/Product/Product.vue');
+const ProductForm = require('./components/Product/ProductForm.vue');
+const ProductMaterial = require('./components/Product/ProductMaterial.vue');
+
 const Material = require('./components/Material/Material.vue');
+const MaterialForm = require('./components/Material/MaterialForm.vue');
+
+const Fabrication = require('./components/Fabrication/Fabrication.vue');
+const FabricationForm = require('./components/Fabrication/FabricationForm.vue');
+
+const Command = require('./components/Command/Command.vue');
+const CommandForm = require('./components/Command/CommandForm.vue');
+const CommandMaterial = require('./components/Command/CommandMaterial.vue');
+
+const Delivery = require('./components/Delivery/Delivery.vue');
+const DeliveryForm = require('./components/Delivery/DeliveryForm.vue');
+const DeliveryProduct = require('./components/Delivery/DeliveryProduct.vue');
 
 const Message =  require('./components/Message.vue');
 
 Vue.component('modal', modal);
 Vue.component('alert', alert);
-Vue.component('tabs', tabset);
-Vue.component('tab-group', tabGroup);
-Vue.component('tab', tab);
+Vue.component('progressbar', progressbar);
+Vue.component('datepicker', datepicker);
 
 Vue.component('pulse-loader', PulseLoader);
 
@@ -64,7 +76,22 @@ Vue.component('provider', Provider);
 Vue.component('provider-form', ProviderForm);
 
 Vue.component('product', Product);
+Vue.component('product-form', ProductForm);
+Vue.component('product-material', ProductMaterial);
+
 Vue.component('material', Material);
+Vue.component('material-form', MaterialForm);
+
+Vue.component('fabrication', Fabrication);
+Vue.component('fabrication-form', FabricationForm);
+
+Vue.component('command', Command);
+Vue.component('command-form', CommandForm);
+Vue.component('command-material', CommandMaterial);
+
+Vue.component('delivery', Delivery);
+Vue.component('delivery-form', DeliveryForm);
+Vue.component('delivery-product', DeliveryProduct);
 
 Vue.component('message', Message);
 
@@ -73,7 +100,10 @@ const routes = [
   	{ path: '/clients', component: Client },
   	{ path: '/providers', component: Provider },
   	{ path: '/products', component: Product },
-  	{ path: '/materials', component: Material }
+  	{ path: '/materials', component: Material },
+  	{ path: '/fabrications', component: Fabrication },
+  	{ path: '/commands', component: Command },
+  	{ path: '/deliveries', component: Delivery }
 ]
 
 const router = new VueRouter({

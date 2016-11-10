@@ -19,6 +19,9 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->bigInteger('quantity')->default(0);
             $table->float('unite_price');
+            $table->integer('count_fabrication')->default(0);
+            $table->integer('count_deliveries')->default(0);
+            $table->integer('count_materials')->default(0);
 
             $table->boolean('actif')->default(true);
             $table->timestamps();

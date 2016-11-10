@@ -45,14 +45,6 @@ class FabricationController extends Controller
     {
         //
         $fabrication = Fabrication::create($request->all());
-        /*$fabrication->full_name = $request->full_name;
-        $fabrication->nrc = $request->nrc;
-        $fabrication->nif = $request->nif;
-        $fabrication->na = $request->na;
-        $fabrication->address = $request->address;
-        $fabrication->phone = $request->phone;
-        $fabrication->fax = $request->fax;*/
-        //$fabrication->save();
 
         return $fabrication->toJson();
     }

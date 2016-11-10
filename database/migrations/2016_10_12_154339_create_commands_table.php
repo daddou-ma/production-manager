@@ -17,10 +17,10 @@ class CreateCommandsTable extends Migration
         Schema::create('commands', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('provider_id')->unsigned()->nullable(); ;
-            $table->bigInteger('quantity')->default(0);
-            $table->bigInteger('progress')->default(0);
             $table->boolean('state')->default(false);
-
+            $table->integer('count_materials')->default(0);
+            $table->date('command_date');
+            $table->integer('total_price')->default(0);
             $table->boolean('actif')->default(true);
             $table->timestamps();
         });

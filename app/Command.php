@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Command extends Model
 {
 
-	protected $fillable = ['full_name', 'nrc', 'nif', 'na', 'address', 'phone', 'fax'];
+	protected $fillable = ['provider_id', 'command_date', 'total_price','state'];
 	protected $guarded = [];
 
 	protected $orderBy = 'created_at';
@@ -18,7 +18,7 @@ class Command extends Model
     public function materials() {
 		//return $this->hasMany('App\ProductMaterial');
 		return $this->belongsToMany('App\Material', 'material_command')
-		->withPivot('quantity');
+		->withPivot('quantity', 'price');
 	}
 
     public function provider() {

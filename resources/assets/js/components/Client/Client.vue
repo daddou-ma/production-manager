@@ -118,7 +118,7 @@
                     na: '',
                     address: '',
                     phone: '',
-                    fax: ''
+                    fax: '',
                 }
             },
             create() {

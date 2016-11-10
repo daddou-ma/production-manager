@@ -1,40 +1,8 @@
 <template>
     <div>
-        <div class="modal fade" id="material-form" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="exampleModalLabel">
-                            <span v-if="newMaterial">Nouveau Material</span>
-                            <span v-else="newMaterial">Modifier Material</span>
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="name">Nom complet :</span>
-                                <input type="text" class="form-control" v-model="material.name" aria-describedby="name">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NRC :</span>
-                                <input type="text" class="form-control" v-model="material.quantity" aria-describedby="nrc">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NIF :</span>
-                                <input type="text" class="form-control" v-model="material.unite_price" aria-describedby="nif">
-                            </div><br/>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" v-if="newMaterial" v-on:click="openConfirmDialogue()">Creer Material</button>
-                        <button type="button" class="btn btn-primary" v-else v-on:click="openConfirmDialogue()">Modifier Material</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <message v-bind:msg="msg" v-on:save="save()"  v-on:update="update()"></message>
+        <material-form v-bind:material="material" v-bind:form="form"></material-form>
+        <message v-bind:confirm="confirm"></message>
+
         <div class="panel panel-default">
             <div class="panel-heading">Materials</div>
             <div class="panel-body">
@@ -50,8 +18,8 @@
                     <tr class="info">
                         <th>Id</th>
                         <th>Nom Produit</th>
-                        <th>Qantite</th>
-                        <th>Prix/unite</th>
+                        <th>Prix Unitaire</th>
+                        <th>Quantite</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -59,11 +27,11 @@
                     <tr v-for="material in materials">
                         <td><span class="label label-default">{{ material.id }}</span></td>
                         <td>{{ material.name }}</td>
-                        <td>{{ material.quantity }}</td>
                         <td>{{ material.unite_price }}</td>
+                        <td>{{ material.quantity }}</td>
                         <td>
                             <a class="btn btn-default btn-xs" v-on:click="edit(material)">Modifier</a>
-                            <a class="btn btn-danger btn-xs" v-on:click="destroy(material)">
+                            <a class="btn btn-danger btn-xs" v-on:click="_delete(material)">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a>
                         </td>
@@ -79,22 +47,31 @@
         data() {
             return {
                 material: {
-                    name: '',
-                    quantity: '',
-                    unite_price: '',
                 },
-                materials: [],
-                open: false,
-                newMaterial: false,
-                apiUrl: 'api/v1',
-                msg: {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
-                    show: false,
+                form : {
                     title: '',
                     content: '',
+                    validBtn: '',
+                    classBtn: '',
+                    show: false,
+                    edit: false,
+                    validate: function () {},
+                    cancel: function () {},
                 },
+                confirm : {
+                    title: '',
+                    content: '',
+                    validBtn: '',
+                    classBtn: '',
+                    success: false,
+                    error: false,
+                    errors: [],
+                    show: false,
+                    validate: function () {},
+                    cancel: function () {},
+                },
+                materials: [],
+                apiUrl: 'api/v1',
             }
         },
         mounted() {
@@ -125,115 +102,164 @@
                     console.log(JSON.parse(response.data))
                 });
             },
-            emptyMaterial () {
+            resetMaterial(){
                 this.material = {
-                    full_name: '',
-                    nrc: '',
-                    nif: '',
-                    na: '',
-                    address: '',
-                    phone: '',
-                    fax: ''
+                    name: '',
+                    unite_price: '',
+                    quantity: ''
                 }
             },
-            openDialog ($open, $new) {
-                this.open = $open
-                this.newMaterial = $new  
-                if (this.open) {
-                    $('#material-form').modal('show')
-                }
-                else {
-                    $('#material-form').modal('hide')
-                }
-            },
-            openConfirmDialogue() {
-                bus.$emit('dialog', true)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            closeConfirmDialogue() {
-                bus.$emit('dialog', false)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            create () {
-                this.emptyMaterial()
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
+            create() {
+                this.resetMaterial()
+                var self = this
+                this.form = {
+                    title: 'Nouveau Material',
+                    content: 'Remplisez le formulaire',
+                    validBtn: 'Creer le Material',
+                    classBtn: 'btn-success',
                     show: true,
-                    title: 'Creer',
-                    content: 'Vouler vous creer le material !'
+                    validate: function () {
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Voulez-vous creer le material : ' + self.material.name,
+                            validBtn: 'Creer le Material',
+                            classBtn: 'btn-success',
+                            loading: false,
+                            success: false,
+                            error: false,
+                            errors: [],
+                            show: true,
+                            validate: function () {
+                                self.save()
+                            },
+                            cancel: function () {
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
                 }
-                this.openDialog(true, true)
             },
-            edit ($material) {
+            edit($material) {
                 this.material = $material
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: false,
+                var self = this
+                this.form = {
+                    title: 'Modifier le material :' + self.material.name,
+                    content: 'Modifier Les champs',
+                    validBtn: 'Modifier le Material',
+                    classBtn: 'btn-primary',
                     show: true,
-                    title: 'Modifier',
-                    content: 'Vouler vous modifier le material ' + this.material.full_name + ' !'
+                    errors: [],
+                    validate: function () {
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Voulez-vous modifier le material : ' + self.material.name,
+                            validBtn: 'Modifier le Material',
+                            classBtn: 'btn-primary',
+                            loading: false,
+                            success: false,
+                            show: true,
+                            validate: function () {
+                                self.update()
+                            },
+                            cancel: function () {
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
                 }
-                this.openDialog(true, false)
+            },
+            _delete ($material) {
+                this.material = $material
+                var self = this
+                this.confirm = {
+                    title: 'Confirmation',
+                    content: 'Voulez-vous supprimer le material : ' + self.material.name,
+                    validBtn: 'Supprimer le Material',
+                    classBtn: 'btn-danger',
+                    loading: false,
+                    success: false,
+                    show: true,
+                    validate: function () {
+                        self.destroy()
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
+                }
             },
             save () {
-                this.msg.loading = true
+                var self = this
+                this.confirm.loading = true
                 this.$materials.save(this.material).then((response) => {
                     this.material = JSON.parse(response.data)
-                    //TODO
-                    $('#confirm-form').modal('hide');
-                    //TODO
                     console.log(JSON.parse(response.data))
-                    this.msg.loading = false
-                    this.msg.messages = JSON.parse(response.data)
                     this.getMaterials()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, true)
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        self.form.show = false
+                        self.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
-                    this.msg.loading = false
                     console.log(response.body)
-                    this.msg.messages = response.body
-
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                 });
             },
             update () {
-                this.msg.loading = true
+                var self = this
+                this.confirm.loading = true
                 this.$materials.update({id: this.material.id},this.material).then((response) => {
                     //this.material = JSON.parse(response.data)
                     //TODO
-                    console.log(response.data)
-                    this.msg.loading = false
-                    this.getMaterials()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, false)
-                },
-                (response) => {
-                    //TODO
-                    this.msg.loading = false
-                    console.log(response.body)
-                });
-            },
-            destroy ($material) {
-                console.log("deleted ?")
-                this.$materials.delete({id: $material.id}).then((response) => {
-                    //TODO
+                    this.material = JSON.parse(response.data)
                     console.log(JSON.parse(response.data))
                     this.getMaterials()
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        self.form.show = false
+                        self.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
+                    console.log(response.body)
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
+                });
+            },
+            destroy () {
+                var self = this
+                this.confirm.loading = true
+                this.$materials.delete({id: this.material.id}).then((response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.getMaterials()
+                    console.log(JSON.parse(response.data))
+                },
+                (response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                     console.log(response.body)
                 });
             },

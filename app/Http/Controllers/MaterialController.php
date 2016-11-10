@@ -92,7 +92,8 @@ class MaterialController extends Controller
     public function update(MaterialRequest $request, $id)
     {
         //
-        $material = Material::find($id)->update($request->all());
+        $material = Material::find($id);
+        $material->update($request->all());
         return $material->toJson();
     }
 

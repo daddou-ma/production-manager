@@ -17,10 +17,10 @@ class CreateDeliverysTable extends Migration
         Schema::create('deliveries', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('client_id')->unsigned()->nullable(); ;
-            $table->bigInteger('quantity')->default(0);
-            $table->bigInteger('progress')->default(0);
             $table->boolean('state')->default(false);
-
+            $table->integer('count_products')->default(0);
+            $table->date('delivery_date');
+            $table->integer('total_price')->default(0);
             $table->boolean('actif')->default(true);
             $table->timestamps();
         });

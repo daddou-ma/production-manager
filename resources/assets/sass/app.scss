@@ -7,6 +7,10 @@
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+body {
+  	background: url('../img/background.png');
+}
+
 
 .section {
 	background: #F5F5F5;

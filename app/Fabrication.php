@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Fabrication extends Model
 {
     //
+
+    protected $fillable = ['product_id', 'fabrication_date', 'quantity', 'progress', 'stats', 'actif'];
+	protected $guarded = [];
+
+	protected $orderBy = 'created_at';
+	protected $orderDirection = 'DESC';
+
     public function client() {
 		return $this->belongsTo('App\Client');
 	}

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Material extends Model
 {
     //
-    protected $fillable = ['name', 'quantity', 'unite_price'];
+    protected $fillable = ['id','name', 'quantity', 'unite_price'];
 	protected $guarded = [];
 
 	protected $orderBy = 'created_at';
@@ -20,7 +20,8 @@ class Material extends Model
 	}
 
 	public function commands() {
-		return $this->hasMany('App\Command', 'material_command');
+		return $this->belongsToMany('App\Command', 'material_command')
+		->withPivot('quantity', 'price');
 	}
 
 	public function scopeOrdered($query)

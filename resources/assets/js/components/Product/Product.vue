@@ -1,40 +1,8 @@
 <template>
     <div>
-        <div class="modal fade" id="product-form" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="exampleModalLabel">
-                            <span v-if="newProduct">Nouveau Product</span>
-                            <span v-else="newProduct">Modifier Product</span>
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="name">Nom complet :</span>
-                                <input type="text" class="form-control" v-model="product.name" aria-describedby="name">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NRC :</span>
-                                <input type="text" class="form-control" v-model="product.quantity" aria-describedby="nrc">
-                            </div><br/>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" id="nrc">NIF :</span>
-                                <input type="text" class="form-control" v-model="product.unite_price" aria-describedby="nif">
-                            </div><br/>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" v-if="newProduct" v-on:click="openConfirmDialogue()">Creer Product</button>
-                        <button type="button" class="btn btn-primary" v-else v-on:click="openConfirmDialogue()">Modifier Product</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <message v-bind:msg="msg" v-on:save="save()"  v-on:update="update()"></message>
+        <product-form v-bind:product="product" v-bind:form="form"></product-form>
+        <message v-bind:confirm="confirm"></message>
+
         <div class="panel panel-default">
             <div class="panel-heading">Products</div>
             <div class="panel-body">
@@ -50,8 +18,8 @@
                     <tr class="info">
                         <th>Id</th>
                         <th>Nom Produit</th>
-                        <th>Qantite</th>
-                        <th>Prix/unite</th>
+                        <th>Prix Unitaire</th>
+                        <th>Quantite</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -59,11 +27,11 @@
                     <tr v-for="product in products">
                         <td><span class="label label-default">{{ product.id }}</span></td>
                         <td>{{ product.name }}</td>
-                        <td>{{ product.quantity }}</td>
                         <td>{{ product.unite_price }}</td>
+                        <td>{{ product.quantity }}</td>
                         <td>
                             <a class="btn btn-default btn-xs" v-on:click="edit(product)">Modifier</a>
-                            <a class="btn btn-danger btn-xs" v-on:click="destroy(product)">
+                            <a class="btn btn-danger btn-xs" v-on:click="_delete(product)">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a>
                         </td>
@@ -79,22 +47,31 @@
         data() {
             return {
                 product: {
-                    name: '',
-                    quantity: '',
-                    unite_price: '',
                 },
-                products: [],
-                open: false,
-                newProduct: false,
-                apiUrl: 'api/v1',
-                msg: {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
-                    show: false,
+                form : {
                     title: '',
                     content: '',
+                    validBtn: '',
+                    classBtn: '',
+                    show: false,
+                    edit: false,
+                    validate: function () {},
+                    cancel: function () {},
                 },
+                confirm : {
+                    title: '',
+                    content: '',
+                    validBtn: '',
+                    classBtn: '',
+                    success: false,
+                    error: false,
+                    errors: [],
+                    show: false,
+                    validate: function () {},
+                    cancel: function () {},
+                },
+                products: [],
+                apiUrl: 'api/v1',
             }
         },
         mounted() {
@@ -125,115 +102,165 @@
                     console.log(JSON.parse(response.data))
                 });
             },
-            emptyProduct () {
+            resetProduct(){
                 this.product = {
-                    full_name: '',
-                    nrc: '',
-                    nif: '',
-                    na: '',
-                    address: '',
-                    phone: '',
-                    fax: ''
+                    name: '',
+                    unite_price: '',
+                    quantity: '',
+                    materials: []
                 }
             },
-            openDialog ($open, $new) {
-                this.open = $open
-                this.newProduct = $new  
-                if (this.open) {
-                    $('#product-form').modal('show')
-                }
-                else {
-                    $('#product-form').modal('hide')
-                }
-            },
-            openConfirmDialogue() {
-                bus.$emit('dialog', true)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            closeConfirmDialogue() {
-                bus.$emit('dialog', false)
-
-                /*this.msg = 'hada msg'
-                this.confim = 'hada confirm'
-                this.cfunction = 'save()'
-                $('#confirm-form').modal('show');*/
-            },
-            create () {
-                this.emptyProduct()
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: true,
+            create() {
+                this.resetProduct()
+                var self = this
+                this.form = {
+                    title: 'Nouveau Product',
+                    content: 'Remplisez le formulaire',
+                    validBtn: 'Creer le Product',
+                    classBtn: 'btn-success',
                     show: true,
-                    title: 'Creer',
-                    content: 'Vouler vous creer le product !'
+                    validate: function () {
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Voulez-vous creer le product : ' + self.product.name,
+                            validBtn: 'Creer le Product',
+                            classBtn: 'btn-success',
+                            loading: false,
+                            success: false,
+                            error: false,
+                            errors: [],
+                            show: true,
+                            validate: function () {
+                                self.save()
+                            },
+                            cancel: function () {
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
                 }
-                this.openDialog(true, true)
             },
-            edit ($product) {
+            edit($product) {
                 this.product = $product
-                this.msg = {
-                    loading: false,
-                    messages: null,
-                    newElement: false,
+                var self = this
+                this.form = {
+                    title: 'Modifier le product :' + self.product.name,
+                    content: 'Modifier Les champs',
+                    validBtn: 'Modifier le Product',
+                    classBtn: 'btn-primary',
                     show: true,
-                    title: 'Modifier',
-                    content: 'Vouler vous modifier le product ' + this.product.full_name + ' !'
+                    errors: [],
+                    validate: function () {
+                        var form = this
+                        this.show = false
+                        self.confirm = {
+                            title: 'Confirmation',
+                            content: 'Voulez-vous modifier le product : ' + self.product.name,
+                            validBtn: 'Modifier le Product',
+                            classBtn: 'btn-primary',
+                            loading: false,
+                            success: false,
+                            show: true,
+                            validate: function () {
+                                self.update()
+                            },
+                            cancel: function () {
+                                this.show = false
+                                form.show = true
+                            }
+                        }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
                 }
-                this.openDialog(true, false)
+            },
+            _delete ($product) {
+                this.product = $product
+                var self = this
+                this.confirm = {
+                    title: 'Confirmation',
+                    content: 'Voulez-vous supprimer le product : ' + self.product.name,
+                    validBtn: 'Supprimer le Product',
+                    classBtn: 'btn-danger',
+                    loading: false,
+                    success: false,
+                    show: true,
+                    validate: function () {
+                        self.destroy()
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
+                }
             },
             save () {
-                this.msg.loading = true
+                var self = this
+                this.confirm.loading = true
                 this.$products.save(this.product).then((response) => {
                     this.product = JSON.parse(response.data)
-                    //TODO
-                    $('#confirm-form').modal('hide');
-                    //TODO
                     console.log(JSON.parse(response.data))
-                    this.msg.loading = false
-                    this.msg.messages = JSON.parse(response.data)
                     this.getProducts()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, true)
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        self.form.show = false
+                        self.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
-                    this.msg.loading = false
                     console.log(response.body)
-                    this.msg.messages = response.body
-
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                 });
             },
             update () {
-                this.msg.loading = true
+                var self = this
+                this.confirm.loading = true
                 this.$products.update({id: this.product.id},this.product).then((response) => {
                     //this.product = JSON.parse(response.data)
                     //TODO
-                    console.log(response.data)
-                    this.msg.loading = false
-                    this.getProducts()
-                    this.closeConfirmDialogue()
-                    this.openDialog(false, false)
-                },
-                (response) => {
-                    //TODO
-                    this.msg.loading = false
-                    console.log(response.body)
-                });
-            },
-            destroy ($product) {
-                console.log("deleted ?")
-                this.$products.delete({id: $product.id}).then((response) => {
-                    //TODO
+                    this.product = JSON.parse(response.data)
                     console.log(JSON.parse(response.data))
                     this.getProducts()
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.confirm.cancel = function() {
+                        self.form.show = false
+                        self.confirm.show = false
+                    }
                 },
                 (response) => {
                     //TODO
+                    console.log(response.body)
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
+                });
+            },
+            destroy () {
+                var self = this
+                this.confirm.loading = true
+                this.$products.delete({id: this.product.id}).then((response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.success = true
+                    this.getProducts()
+                    console.log(JSON.parse(response.data))
+                },
+                (response) => {
+                    //TODO
+                    this.confirm.loading = false
+                    this.confirm.error = true
+                    this.confirm.errors = response.body
                     console.log(response.body)
                 });
             },

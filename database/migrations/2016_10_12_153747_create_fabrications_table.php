@@ -17,7 +17,9 @@ class CreateFabricationsTable extends Migration
         Schema::create('fabrications', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id')->unsigned()->nullable(); ;
+            $table->bigInteger('progress')->default(0);
             $table->bigInteger('quantity')->default(0);
+            $table->date('fabrication_date');
 
             $table->boolean('actif')->default(true);
             $table->timestamps();

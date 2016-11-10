@@ -8,7 +8,11 @@ use App\Http\Requests;
 
 use App\Delivery;
 
+use App\Product;
+
 use App\Http\Requests\DeliveryRequest;
+
+use Illuminate\Support\Facades\Input;
 
 class DeliveryController extends Controller
 {
@@ -55,6 +59,26 @@ class DeliveryController extends Controller
         //$delivery->save();
 
         return $delivery->toJson();
+
+        $products = Input::get('products');
+
+        $ids = array();
+
+        foreach ($products as $product) {
+            # code...
+            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
+            $ids[$product['id']] = ['quantity' => $product['pivot']['quantity'],
+                'price' => $product['pivot']['price']
+            ];
+            $pro = Product::find($product['id']);
+            $pro->quantity = $pro->quantity - $product['pivot']['quantity'];
+            $pro->save();
+        }
+        $delivery->products()->attach($ids);
+        $delivery->count_products = $delivery->products()->count();
+        $delivery->save();
+
+        return $delivery->toJson();
     }
 
     /**
@@ -92,8 +116,36 @@ class DeliveryController extends Controller
     public function update(DeliveryRequest $request, $id)
     {
         //
+        /*
         $delivery = Delivery::find($id);
         $delivery->update($request->all());
+        return $delivery->toJson();
+*/
+        $delivery = Delivery::find($id);
+        $delivery->update($request->all());
+        $products = Input::get('products');
+
+        $ids = array();
+
+        foreach ($delivery->products as $product) {
+            $product->quantity = $product->quantity + $product->pivot->quantity;
+            $product->save();
+        }
+        $delivery->products()->detach();
+
+        foreach ($products as $product) {
+            # code...
+            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
+            $ids[$product['id']] = ['quantity' => $product['pivot']['quantity'],
+                'price' => $product['pivot']['price']
+            ];
+            $pro = Product::find($product['id']);
+            $pro->quantity = $pro->quantity - $product['pivot']['quantity'];
+            $pro->save();
+        }
+        $delivery->products()->attach($ids);
+        $delivery->count_products = $delivery->products()->count();
+        $delivery->save();
         return $delivery->toJson();
     }
 

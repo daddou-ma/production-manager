@@ -39,14 +39,14 @@ class ProductRequest extends FormRequest
             case 'POST':
             {
                 return [
-                    'name' => 'required|unique:products|max:255',
+                    'name' => 'required',
                 ];
             }
             case 'PUT':
             case 'PATCH':
             {
                 return [
-                    'name' => 'required|unique:products,full_name,'.$product->id.'|max:255',
+                    'name' => 'required',
                 ];
             }
             default:break;
@@ -56,7 +56,6 @@ class ProductRequest extends FormRequest
     {
         return [
             'name.required' => 'Le product doit avoir un nom !',
-            'name.unique' => 'Le nom d\'un product doit etre unique !',
         ];
     }
 }

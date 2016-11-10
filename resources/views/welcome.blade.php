@@ -31,7 +31,7 @@
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class="nav-item active">
+                            <li class="nav-item">
                                 <router-link to="/clients">Clients</router-link>
                             </li>
                             <li class="nav-item">
@@ -42,6 +42,15 @@
                             </li>
                             <li class="nav-item">
                                 <router-link to="/materials">Matieres</router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/fabrications">Fabrication</router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/commands">Commandes</router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/deliveries">Livraisons</router-link>
                             </li>
                         </ul>
                     </div>

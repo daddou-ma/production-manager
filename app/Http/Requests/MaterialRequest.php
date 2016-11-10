@@ -46,7 +46,7 @@ class MaterialRequest extends FormRequest
             case 'PATCH':
             {
                 return [
-                    'name' => 'required|unique:materials,full_name,'.$material->id.'|max:255',
+                    'name' => 'required|unique:materials,name,'.$material->id.'|max:255',
                 ];
             }
             default:break;

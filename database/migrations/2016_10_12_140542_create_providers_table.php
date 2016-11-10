@@ -23,6 +23,7 @@ class CreateProvidersTable extends Migration
             $table->string('address');
             $table->string('phone');
             $table->string('fax');
+            $table->integer('count_commands')->default(0);
 
             $table->boolean('actif')->default(true);
             $table->timestamps();

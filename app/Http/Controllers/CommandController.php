@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App\Command;
+use App\Material;
 
 use App\Http\Requests\CommandRequest;
+
+use Illuminate\Support\Facades\Input;
 
 class CommandController extends Controller
 {
@@ -45,14 +48,21 @@ class CommandController extends Controller
     {
         //
         $command = Command::create($request->all());
-        /*$command->full_name = $request->full_name;
-        $command->nrc = $request->nrc;
-        $command->nif = $request->nif;
-        $command->na = $request->na;
-        $command->address = $request->address;
-        $command->phone = $request->phone;
-        $command->fax = $request->fax;*/
-        //$command->save();
+        $materials = Input::get('materials');
+
+        $ids = array();
+
+        foreach ($materials as $material) {
+            # code...
+            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
+            $ids[$material['id']] = ['quantity' => $material['pivot']['quantity'],
+                'price' => $material['pivot']['price']
+            ];
+        }
+        
+        $command->materials()->sync($ids);
+        $command->count_materials = $command->materials()->count();
+        $command->save();
 
         return $command->toJson();
     }
@@ -66,9 +76,9 @@ class CommandController extends Controller
     public function show($id)
     {
         //
-        $commands = Command::with(['provider','materials'])->find($id);
+        $command = Command::with(['provider','materials'])->find($id);
 
-        return $commands->toJson();
+        return $command->toJson();
     }
 
     /**
@@ -94,6 +104,29 @@ class CommandController extends Controller
         //
         $command = Command::find($id);
         $command->update($request->all());
+        $materials = Input::get('materials');
+
+        $ids = array();
+
+        foreach ($command->materials as $material) {
+            $material->quantity = $material->quantity + $material->pivot->quantity;
+            $material->save();
+        }
+        $command->materials()->detach();
+
+        foreach ($materials as $material) {
+            # code...
+            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
+            $ids[$material['id']] = ['quantity' => $material['pivot']['quantity'],
+                'price' => $material['pivot']['price']
+            ];
+            $mat = Material::find($material['id']);
+            $mat->quantity = $mat->quantity - $material['pivot']['quantity'];
+            $mat->save();
+        }
+        $command->materials()->attach($ids);
+        $command->count_materials = $command->materials()->count();
+        $command->save();
         return $command->toJson();
     }
 

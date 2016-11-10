@@ -8,6 +8,8 @@ use App\Http\Requests;
 
 use App\Product;
 
+use Illuminate\Support\Facades\Input;
+
 use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
@@ -20,7 +22,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::with(['fabrications','deliveries','materials'])->ordered()->get();
+        $products = Product::with(['fabrications','deliveries.client','materials'])->ordered()->get();
 
         return $products->toJson();
     }
@@ -45,14 +47,18 @@ class ProductController extends Controller
     {
         //
         $product = Product::create($request->all());
-        /*$product->full_name = $request->full_name;
-        $product->nrc = $request->nrc;
-        $product->nif = $request->nif;
-        $product->na = $request->na;
-        $product->address = $request->address;
-        $product->phone = $request->phone;
-        $product->fax = $request->fax;*/
-        //$product->save();
+        $materials = Input::get('materials');
+
+        $ids = array();
+
+        foreach ($materials as $material) {
+            # code...
+            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
+            $ids[$material['id']] = ['quantity' => $material['pivot']['quantity']];
+        }
+        $product->materials()->sync($ids);
+        $product->count_materials = $product->materials()->count();
+        $product->save();
 
         return $product->toJson();
     }
@@ -66,9 +72,9 @@ class ProductController extends Controller
     public function show($id)
     {
         //
-        $products = Product::with(['fabrications.product','fabrications.product','deliveries.product','deliveries.product','materials'])->find($id);
+        $product = Product::with(['fabrications','deliveries.client','materials'])->find($id);
 
-        return $products->toJson();
+        return $product->toJson();
     }
 
     /**
@@ -92,8 +98,21 @@ class ProductController extends Controller
     public function update(ProductRequest $request, $id)
     {
         //
-        $product = Product::find($id)->update($request->all());
-        return $products->toJson();
+        $product = Product::find($id);
+        $product->update($request->all());
+        $materials = Input::get('materials');
+
+        $ids = array();
+
+        foreach ($materials as $material) {
+            # code...
+            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
+            $ids[$material['id']] = ['quantity' => $material['pivot']['quantity']];
+        }
+        $product->materials()->sync($ids);
+        $product->count_materials = $product->materials()->count();
+        $product->save();
+        return $product->toJson();
     }
 
     /**

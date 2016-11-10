@@ -23,6 +23,7 @@ class CreateClientsTable extends Migration
             $table->string('address');
             $table->string('phone');
             $table->string('fax');
+            $table->integer('count_deliveries')->default(0);
 
             $table->boolean('actif')->default(true);
             $table->timestamps();
