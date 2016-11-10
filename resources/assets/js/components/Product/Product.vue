@@ -76,7 +76,7 @@
         },
         mounted() {
             console.log('Product ready.')
-            this.$products = this.$resource('http://127.0.0.1:8000/api/v1/products{/id}')
+            this.$products = this.$resource('/api/v1/products{/id}')
             this.getProducts()
         },
         methods: {

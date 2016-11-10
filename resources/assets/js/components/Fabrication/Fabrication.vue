@@ -85,7 +85,7 @@
         },
         mounted() {
             console.log('Fabrication ready.')
-            this.$fabrications = this.$resource('http://127.0.0.1:8000/api/v1/fabrications{/id}')
+            this.$fabrications = this.$resource('/api/v1/fabrications{/id}')
             this.getFabrications()
 
             this.$http.get('/api/v1/products').then((response) => {

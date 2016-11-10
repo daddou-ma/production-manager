@@ -87,7 +87,7 @@
         mounted() {
             this.resetCommand()
             console.log('Command ready.')
-            this.$deliveries = this.$resource('http://127.0.0.1:8000/api/v1/deliveries{/id}')
+            this.$deliveries = this.$resource('/api/v1/deliveries{/id}')
             this.getCommands()
         },
         methods: {

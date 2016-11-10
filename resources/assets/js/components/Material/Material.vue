@@ -76,7 +76,7 @@
         },
         mounted() {
             console.log('Material ready.')
-            this.$materials = this.$resource('http://127.0.0.1:8000/api/v1/materials{/id}')
+            this.$materials = this.$resource('/api/v1/materials{/id}')
             this.getMaterials()
         },
         methods: {

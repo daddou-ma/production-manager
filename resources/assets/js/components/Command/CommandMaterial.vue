@@ -21,10 +21,10 @@
                 </option>
             </select>
             <span class="input-group-btn"></span>
-            <input type="number" class="form-control" placeholder="quantity" v-model="quantity">
+            <input type="number" class="form-control" placeholder="quantite" v-model="quantity">
             <span class="input-group-addon">kg</span>
            	<span class="input-group-btn"></span>
-		    <input type="number" class="form-control" placeholder="price" v-model="price">
+		    <input type="number" class="form-control" placeholder="prix" v-model="price">
             <span class="input-group-addon">DA/kg</span>
             <span class="input-group-btn"></span>
             <span class="input-group-addon">Total : 

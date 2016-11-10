@@ -84,7 +84,7 @@
         },
         mounted() {
             console.log('Provider ready.')
-            this.$providers = this.$resource('http://127.0.0.1:8000/api/v1/providers{/id}')
+            this.$providers = this.$resource('/api/v1/providers{/id}')
             this.getProviders()
         },
         methods: {

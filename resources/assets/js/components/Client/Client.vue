@@ -84,7 +84,7 @@
         },
         mounted() {
             console.log('Client ready.')
-            this.$clients = this.$resource('http://127.0.0.1:8000/api/v1/clients{/id}')
+            this.$clients = this.$resource('/api/v1/clients{/id}')
             this.getClients()
         },
         methods: {
