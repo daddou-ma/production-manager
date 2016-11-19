@@ -19,8 +19,17 @@ class CreateMaterialCommandTable extends Migration
             $table->integer('command_id')->unsigned()->nullable(); ;
             $table->integer('material_id')->unsigned()->nullable(); ;
             $table->bigInteger('quantity')->default(0);
-            $table->bigInteger('price')->default(0);
-            
+            $table->float('unite_price')->default(0);
+            $table->float('mantant_facture')->default(0);
+            $table->float('pret')->default(0);
+            $table->float('taux_euro')->default(0);
+            $table->float('euro_dinars')->default(0);
+            $table->float('taux_dinars')->default(0);
+            $table->float('taux_douane')->default(0);
+            $table->float('transit_fees')->default(0);
+            $table->float('taux_achat')->default(0);
+            $table->float('calculed_price')->default(0);
+
             $table->boolean('actif')->default(true);
             $table->timestamps();
         });

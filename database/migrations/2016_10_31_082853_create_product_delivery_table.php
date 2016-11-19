@@ -19,8 +19,9 @@ class CreateProductDeliveryTable extends Migration
             $table->integer('delivery_id')->unsigned()->nullable(); ;
             $table->integer('product_id')->unsigned()->nullable(); ;
             $table->bigInteger('quantity')->default(0);
-            $table->bigInteger('price')->default(0);
-            
+            $table->float('unite_price')->default(0);
+            $table->float('price')->default(0);
+
             $table->boolean('actif')->default(true);
             $table->timestamps();
         });

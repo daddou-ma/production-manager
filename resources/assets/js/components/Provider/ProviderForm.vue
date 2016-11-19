@@ -15,35 +15,42 @@
                     <p> {{ form.content }} </p>
                     <form>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="name">Nom complet 
+                            <span class="input-group-addon" id="name">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Nom complet 
                                 <span class="text-danger">( * )</span> : 
                             </span>
-                            <input type="text" class="form-control" v-model="provider.full_name" aria-describedby="name" v-validate data-rules="required" name="name">
+                            <input type="text" class="form-control" v-model="provider.full_name" aria-describedby="name" v-validate data-rules="required" name="name" placeholder="Le nom du Fournisseur">
                         </div>
                         <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">NRC :</span>
-                            <input type="text" class="form-control" v-model="provider.nrc" aria-describedby="nrc">
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> NRC :</span>
+                            <input type="text" class="form-control" v-model="provider.nrc" aria-describedby="nrc" placeholder="NRC (Optionel)">
                         </div><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">NIF :</span>
-                            <input type="text" class="form-control" v-model="provider.nif" aria-describedby="nif">
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> NIF :</span>
+                            <input type="text" class="form-control" v-model="provider.nif" aria-describedby="nif" placeholder="NIF (Optionel)">
                         </div><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="na">NA :</span>
-                            <input type="text" class="form-control" v-model="provider.na" aria-describedby="name">
+                            <span class="input-group-addon" id="na">
+                            <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> NA :</span>
+                            <input type="text" class="form-control" v-model="provider.na" aria-describedby="name" placeholder="NA (Optionel)">
                         </div><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="address">Address :</span>
-                            <input type="text" class="form-control" v-model="provider.address" aria-describedby="address">
+                            <span class="input-group-addon" id="address">
+                            <span class="glyphicon glyphicon-home" aria-hidden="true"></span> Address :</span>
+                            <input type="text" class="form-control" v-model="provider.address" aria-describedby="address" placeholder="Exemple : Cite xxx No 5 Commune ">
                         </div><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="phone">Telephone :</span>
-                            <input type="phone" class="form-control" v-model="provider.phone" aria-describedby="phone">
+                            <span class="input-group-addon" id="phone">
+                            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Telephone :</span>
+                            <input type="phone" class="form-control" v-model="provider.phone" aria-describedby="phone" placeholder="+213 xxx xxx xxx">
                         </div><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="fax">Fax :</span>
-                            <input type="phone" class="form-control" v-model="provider.fax" aria-describedby="fax">
+                            <span class="input-group-addon" id="fax">
+                            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Fax :</span>
+                            <input type="phone" class="form-control" v-model="provider.fax" aria-describedby="fax" placeholder="+213 xxx xxx xxx">
                         </div><br/>
                     </form>
                 </div>

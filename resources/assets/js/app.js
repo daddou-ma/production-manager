@@ -23,10 +23,10 @@ Vue.use(VueRouter)
 
 Vue.http.options.root = 'http://gestion-pro.herokuapp.com/public/'
 
-var bus = new Vue();
+/*var bus = new Vue();
 
 global.bus = bus;
-
+*/
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the body of the page. From here, you may begin adding components to

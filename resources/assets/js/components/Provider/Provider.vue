@@ -16,15 +16,15 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr class="info">
-                        <th>Id</th>
-                        <th>Nom Complet</th>
-                        <th>NRC</th>
-                        <th>NIF</th>
-                        <th>NA</th>
-                        <th>Address</th>
-                        <th>Telephone</th>
-                        <th>Fax</th>
-                        <th>Action</th>
+                        <th><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Id</th>
+                        <th><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Nom Complet</th>
+                        <th><span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> NRC</th>
+                        <th><span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> NIF</th>
+                        <th><span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> NA</th>
+                        <th><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Address</th>
+                        <th><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Telephone</th>
+                        <th><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Fax</th>
+                        <th><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Action</th>
                     </tr>
                 </thead>
                 <tbody>

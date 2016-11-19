@@ -24,7 +24,7 @@ class DeliveryController extends Controller
     public function index()
     {
         //
-        $deliveries = Delivery::with(['client','products'])->ordered()->get();
+        $deliveries = Delivery::with(['client','products'])->ordered(true)->get();
 
         return $deliveries->toJson();
     }

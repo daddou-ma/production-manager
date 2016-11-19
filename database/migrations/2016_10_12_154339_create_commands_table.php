@@ -20,7 +20,7 @@ class CreateCommandsTable extends Migration
             $table->boolean('state')->default(false);
             $table->integer('count_materials')->default(0);
             $table->date('command_date');
-            $table->integer('total_price')->default(0);
+            $table->float('total_price')->default(0);
             $table->boolean('actif')->default(true);
             $table->timestamps();
         });

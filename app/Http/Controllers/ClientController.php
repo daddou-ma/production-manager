@@ -28,7 +28,13 @@ class ClientController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\ResponseAhhhh Super ￼
+haka kayan deux AIESECer fi uDev lol
+bon wehed ex@
+lol
+￼
+Mdr
+mais manich wehdi
      */
     public function create()
     {

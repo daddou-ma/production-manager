@@ -21,19 +21,24 @@
                     <p> {{ form.content }} </p>
                     <form>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="name">Nom Produit 
+                            <span class="input-group-addon" id="name">
+                            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Nom Produit 
                                 <span class="text-danger">( * )</span> : 
                             </span>
                             <input type="text" class="form-control" v-model="product.name" aria-describedby="name" v-validate data-rules="required" name="name">
                         </div>
                         <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Prix Unitaire :</span>
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-eur" aria-hidden="true"></span> Prix Unitaire :</span>
                             <input type="text" class="form-control" v-model="product.unite_price" aria-describedby="nrc">
+                            <span class="input-group-addon">DA</span>
                         </div><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Quantite :</span>
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Quantite :</span>
                             <input type="text" class="form-control" v-model="product.quantity" aria-describedby="nif">
+                            <span class="input-group-addon">Kg</span>
                         </div><br/>
                     </form>
                 </div>

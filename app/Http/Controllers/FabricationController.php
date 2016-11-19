@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App\Fabrication;
+use App\Product;
+use App\Material;
 
 use App\Http\Requests\FabricationRequest;
 
@@ -20,7 +22,7 @@ class FabricationController extends Controller
     public function index()
     {
         //
-        $fabrications = Fabrication::with(['product'])->ordered()->get();
+        $fabrications = Fabrication::with(['product'])->ordered(true)->get();
 
         return $fabrications->toJson();
     }
@@ -45,6 +47,16 @@ class FabricationController extends Controller
     {
         //
         $fabrication = Fabrication::create($request->all());
+
+        $product = Product::with(['materials'])->find($fabrication->product_id);
+        $product->quantity = $product->quantity + $fabrication->quantity * 1000;
+        $product->save();
+
+        foreach ($product->materials as $mat) {
+            $material = Material::find($mat->id);
+            $material->quantity = $material->quantity - ($mat->pivot->quantity * $fabrication->quantity);
+            $material->save();
+        } 
 
         return $fabrication->toJson();
     }
@@ -85,7 +97,28 @@ class FabricationController extends Controller
     {
         //
         $fabrication = Fabrication::find($id);
+
+        $product = Product::with(['materials'])->find($fabrication->product_id);
+        $product->quantity = $product->quantity - $fabrication->quantity * 1000;
+        $product->save();
+
+        foreach ($product->materials as $mat) {
+            $material = Material::find($mat->id);
+            $material->quantity = $material->quantity + ($mat->pivot->quantity * $fabrication->quantity);
+            $material->save();
+        }
+
         $fabrication->update($request->all());
+
+        $product->quantity = $product->quantity + $fabrication->quantity * 1000;
+        $product->save();
+
+        foreach ($product->materials as $mat) {
+            $material = Material::find($mat->id);
+            $material->quantity = $material->quantity - ($mat->pivot->quantity * $fabrication->quantity);
+            $material->save();
+        }
+
         return $fabrication->toJson();
     }
 
@@ -101,6 +134,16 @@ class FabricationController extends Controller
         $fabrication = Fabrication::find($id);
         $fabrication->actif = false;
         $fabrication->save();
+
+        $product = Product::with(['materials'])->find($fabrication->product_id);
+        $product->quantity = $product->quantity - $fabrication->quantity * 1000;
+        $product->save();
+
+        foreach ($product->materials as $mat) {
+            $material = Material::find($mat->id);
+            $material->quantity = $material->quantity + ($mat->pivot->quantity * $fabrication->quantity);
+            $material->save();
+        }
 
         return $fabrication->toJson();
     }

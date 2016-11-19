@@ -20,7 +20,7 @@ class MaterialController extends Controller
     public function index()
     {
         //
-        $materials = Material::with('commands.provider')->ordered()->get();
+        $materials = Material::with('commands.provider')->ordered(true)->get();
 
         return $materials->toJson();
     }

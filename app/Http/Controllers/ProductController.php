@@ -22,7 +22,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::with(['fabrications','deliveries.client','materials'])->ordered()->get();
+        $products = Product::with(['fabrications','deliveries.client','materials'])->ordered(true)->get();
 
         return $products->toJson();
     }

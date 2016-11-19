@@ -19,7 +19,6 @@
                         <th>Id</th>
                         <th>Nom Produit</th>
                         <th>Quantite</th>
-                        <th>Avancement</th>
                         <th>Etat</th>
                         <th>Delais</th>
                         <th>Actions</th>
@@ -30,11 +29,6 @@
                         <td><span class="label label-default">{{ fabrication.id }}</span></td>
                         <td>{{ fabrication.product.name }}</td>
                         <td>{{ fabrication.quantity }}</td>
-                        <td>
-                            <div class="progress">
-                                <progressbar :now="fabrication.progress*100/fabrication.quantity >> 0" label type="danger" striped></progressbar>
-                            </div>
-                        </td>
                         <td>{{ fabrication.stats }}</td>
                         <td>{{ fabrication.fabrication_date }}</td>
                         <td>

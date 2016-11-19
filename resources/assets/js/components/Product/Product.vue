@@ -16,11 +16,11 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr class="info">
-                        <th>Id</th>
-                        <th>Nom Produit</th>
-                        <th>Prix Unitaire</th>
-                        <th>Quantite</th>
-                        <th>Actions</th>
+                        <th><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Id</th>
+                        <th><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Nom Produit</th>
+                        <th><span class="glyphicon glyphicon-eur" aria-hidden="true"></span> Prix Unitaire</th>
+                        <th><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Quantite</th>
+                        <th><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Actions</th>
                     </tr>
                 </thead>
                 <tbody>

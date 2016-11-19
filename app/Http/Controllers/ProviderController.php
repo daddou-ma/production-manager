@@ -20,7 +20,7 @@ class ProviderController extends Controller
     public function index()
     {
         //
-        $providers = Provider::with(['commands.materials'])->ordered()->get();
+        $providers = Provider::with(['commands.materials'])->ordered(true)->get();
 
         return $providers->toJson();
     }

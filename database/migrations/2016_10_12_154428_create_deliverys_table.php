@@ -20,6 +20,8 @@ class CreateDeliverysTable extends Migration
             $table->boolean('state')->default(false);
             $table->integer('count_products')->default(0);
             $table->date('delivery_date');
+            $table->float('total_notax')->default(0);
+            $table->integer('taux_douane')->default(0);
             $table->integer('total_price')->default(0);
             $table->boolean('actif')->default(true);
             $table->timestamps();

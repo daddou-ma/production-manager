@@ -17,7 +17,7 @@ require('bootstrap-sass');
  */
 
 window.Vue = require('vue');
-require('vuex');
+//require('vuex');
 
 //window.Vue.use(window.Vuex);
 

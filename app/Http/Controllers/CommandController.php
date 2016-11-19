@@ -23,7 +23,7 @@ class CommandController extends Controller
     public function index()
     {
         //
-        $commands = Command::with(['provider','materials'])->ordered()->get();
+        $commands = Command::with(['provider','materials'])->ordered(true)->get();
 
         return $commands->toJson();
     }

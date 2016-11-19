@@ -15,17 +15,20 @@
                     <p> {{ form.content }} </p>
                     <form>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="name">Nom Produit 
+                            <span class="input-group-addon" id="name">
+                            <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Nom Produit 
                                 <span class="text-danger">( * )</span> : 
                             </span>
                             <select v-model="fabrication.product_id" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                              <option v-for="product in products" v-bind:value="product.id">
-                                {{ product.name }}
-                              </option>
+                                <option v-for="product in products" v-bind:value="product.id">
+                                    {{ product.name }}
+                                </option>
                             </select>
                         </div><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Delais :</span>
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
+                                Delais :</span>
                             <select v-model="fabrication.day" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
                                 <option v-for="day in days" v-bind:value="day.id">
                                 {{ day.name }}
@@ -46,19 +49,10 @@
                         </div>
                         <span v-show="errors.has('product')" class="text-danger">{{ errors.first('product') }}</span><br/>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Progression :</span>
-                            <input type="number" class="form-control" v-model="fabrication.progress" aria-describedby="nrc" min="0" :max="fabrication.quantity" :disabled="fabrication.stats"/>
-                            <span class="input-group-addon">
-                                <input type="checkbox" aria-label="etats" v-model="fabrication.stats">
-                                fini ?
-                            </span>
-                        </div><br/>
-                        <div class="progress">
-                            <progressbar :now="fabrication.progress/fabrication.quantity*100 >> 0" label type="danger" striped></progressbar>
-                        </div><br>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Quantite :</span>
-                            <input type="number" class="form-control" v-model="fabrication.quantity" aria-describedby="nif" min="0">
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-th" aria-hidden="true"></span> Quantite :</span>
+                            <input type="number" class="form-control" v-model="fabrication.quantity" aria-describedby="nif" min="0" placeholder="Quantite en kg">
+                            <span class="input-group-addon"> kg</span>
                         </div><br/>
                     </form>
                 </div>
