@@ -26,6 +26,13 @@ class DeliveryController extends Controller
         //
         $deliveries = Delivery::with(['client','products'])->ordered(true)->get();
 
+
+        foreach ($deliverie->products as $prod) {
+            $product = Material::find($prod->id);
+            $product->quantity = $product->quantity - ($prod->pivot->quantity);
+            $product->save();
+        } 
+
         return $deliveries->toJson();
     }
 
