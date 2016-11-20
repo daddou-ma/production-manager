@@ -21,7 +21,7 @@
     "vue-modal-plugin": "^0.1.1",
     "vue-router": "^2.0.1",
     "vue-spinner": "^1.0.2",
-    "vue-strap": "^1.1.29",
+    "vue-strap": "1.1.29",
     "vuex": "^2.0.0"
   }
 }
