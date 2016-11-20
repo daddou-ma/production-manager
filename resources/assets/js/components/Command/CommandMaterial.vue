@@ -14,8 +14,8 @@
                 </div>
 	        </li>
 	    </div>
-	    <div class="input-group input-group-sm">
-	    	<select class="form-control" v-model="material" aria-describedby="name" v-validate data-rules="required" name="product" placeholder="Product">
+        <div class="input-group input-group-sm">
+            <select class="form-control" v-model="material" aria-describedby="name" v-validate data-rules="required" name="product" placeholder="Product">
                 <option v-for="material in materialsList" v-bind:value="material">
                 {{ material.name }}
                 </option>
@@ -23,9 +23,25 @@
             <span class="input-group-btn"></span>
             <input type="number" class="form-control" placeholder="quantite" v-model="quantity">
             <span class="input-group-addon">kg</span>
-           	<span class="input-group-btn"></span>
-		    <input type="number" class="form-control" placeholder="prix" v-model="price">
+            <span class="input-group-btn"></span>
+            <input type="number" class="form-control" placeholder="prix" v-model="unite_price">
             <span class="input-group-addon">DA/kg</span>
+        </div><br>
+        <div class="input-group input-group-sm">
+            <span class="input-group-btn"></span>
+            <input type="number" class="form-control" placeholder="PRET" v-model="pret">
+            <span class="input-group-addon">DA</span>
+            <span class="input-group-btn"></span>
+            <input type="number" class="form-control" placeholder="Euro -> Dinars" v-model="euro_dinars">
+            <span class="input-group-addon">DA</span>
+        </div><br>
+	    <div class="input-group input-group-sm">
+            <span class="input-group-btn"></span>
+            <input type="number" class="form-control" placeholder="Taux Douane" v-model="taux_douane">
+            <span class="input-group-addon">%</span>
+            <span class="input-group-btn"></span>
+            <input type="number" class="form-control" placeholder="Frais Transit" v-model="transit_fees">
+            <span class="input-group-addon">DA</span>
             <span class="input-group-btn"></span>
             <span class="input-group-addon">Total : 
                 {{ quantity * price }} DA
@@ -52,7 +68,12 @@
     			materialsList: [],
                 materialsTemp: [],
                 quantity: 0,
+                unite_price: 0,
                 price: 0,
+                pret: 0,
+                euro_dinars: 0,
+                taux_douane: 17,
+                transit_fees: 0
     		}
     	},
         props: ['materials'],
@@ -75,7 +96,12 @@
         	add() {
         		this.material.pivot = {
         			quantity: this.quantity,
-                    price: this.price
+                    unite_price: this.unite_price,
+                    price: this.price,
+                    pret: this.pret,
+                    euro_dinars: this.euro_dinars,
+                    taux_douane: this.taux_douane,
+                    transit_fees: this.transit_fees
         		}
         		//this.materials.push(this.material)
                 this.$emit('add', this.material)

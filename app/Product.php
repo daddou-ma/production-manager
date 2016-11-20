@@ -26,7 +26,7 @@ class Product extends Model
 	public function deliveries() {
 		//return $this->hasMany('App\Component');
 		return $this->belongsToMany('App\Delivery', 'product_delivery')
-		->withPivot('quantity', 'quantity','unite_price','price');	
+		->withPivot('quantity', 'unite_price','price');	
 	}
 
 	public function scopeOnlyActif($query, $actif)

@@ -26,13 +26,6 @@ class DeliveryController extends Controller
         //
         $deliveries = Delivery::with(['client','products'])->ordered(true)->get();
 
-
-        foreach ($deliverie->products as $prod) {
-            $product = Material::find($prod->id);
-            $product->quantity = $product->quantity - ($prod->pivot->quantity);
-            $product->save();
-        } 
-
         return $deliveries->toJson();
     }
 
@@ -65,24 +58,26 @@ class DeliveryController extends Controller
         $delivery->fax = $request->fax;*/
         //$delivery->save();
 
-        return $delivery->toJson();
-
         $products = Input::get('products');
 
         $ids = array();
-
+        $total_nt = 0;
         foreach ($products as $product) {
             # code...
             //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
             $ids[$product['id']] = ['quantity' => $product['pivot']['quantity'],
-                'price' => $product['pivot']['price']
+                'unite_price' => $product['pivot']['unite_price'],
+                'price' => $product['pivot']['unite_price']*$product['pivot']['quantity']
             ];
             $pro = Product::find($product['id']);
             $pro->quantity = $pro->quantity - $product['pivot']['quantity'];
             $pro->save();
+            $total_nt = $total_nt + $product['pivot']['unite_price']*$product['pivot']['quantity'];
         }
         $delivery->products()->attach($ids);
         $delivery->count_products = $delivery->products()->count();
+        $delivery->total_notax = $total_nt;
+        $delivery->total_price = $delivery->total_notax + ($delivery->total_notax * $delivery->taux_douane);
         $delivery->save();
 
         return $delivery->toJson();
@@ -129,10 +124,8 @@ class DeliveryController extends Controller
         return $delivery->toJson();
 */
         $delivery = Delivery::find($id);
-        $delivery->update($request->all());
         $products = Input::get('products');
 
-        $ids = array();
 
         foreach ($delivery->products as $product) {
             $product->quantity = $product->quantity + $product->pivot->quantity;
@@ -140,18 +133,28 @@ class DeliveryController extends Controller
         }
         $delivery->products()->detach();
 
+        $delivery->update($request->all());
+
+        $ids = array();
+        $total_nt = 0;
+
         foreach ($products as $product) {
             # code...
             //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
             $ids[$product['id']] = ['quantity' => $product['pivot']['quantity'],
-                'price' => $product['pivot']['price']
+                'unite_price' => $product['pivot']['unite_price'],
+                'price' => $product['pivot']['unite_price']*$product['pivot']['quantity']
             ];
             $pro = Product::find($product['id']);
             $pro->quantity = $pro->quantity - $product['pivot']['quantity'];
             $pro->save();
+            $total_nt = $total_nt + $product['pivot']['unite_price']*$product['pivot']['quantity'];
         }
         $delivery->products()->attach($ids);
         $delivery->count_products = $delivery->products()->count();
+        $delivery->total_notax = $total_nt;
+        $delivery->total_price = $delivery->total_notax + ($delivery->total_notax * $delivery->taux_douane / 100);
+
         $delivery->save();
         return $delivery->toJson();
     }
@@ -165,9 +168,15 @@ class DeliveryController extends Controller
     public function destroy($id)
     {
         //
-        $delivery = Delivery::find($id);
+        $delivery = Delivery::with(['products'])->find($id);
         $delivery->actif = false;
         $delivery->save();
+
+        foreach ($delivery->products as $product) {
+            $product->quantity = $product->quantity + $product->pivot->quantity;
+            $product->save();
+        }
+        $delivery->products()->detach();
 
         return $delivery->toJson();
     }

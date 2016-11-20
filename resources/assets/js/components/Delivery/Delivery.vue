@@ -56,7 +56,12 @@
                     name: '',
                     unite_price: '',
                     quantity: '',
-                    products: []
+                    products: [],
+                    count_products: 0,
+                    delivery_date: 0,
+                    total_notax: 0,
+                    taux_douane: 0,
+                    total_price: 0
                 },
                 form : {
                     title: '',
@@ -118,7 +123,12 @@
                     name: '',
                     unite_price: '',
                     quantity: '',
-                    products: []
+                    products: [],
+                    count_products: 0,
+                    delivery_date: 0,
+                    total_notax: 0,
+                    taux_douane: 0,
+                    total_price: 0
                 }
             },
             create() {

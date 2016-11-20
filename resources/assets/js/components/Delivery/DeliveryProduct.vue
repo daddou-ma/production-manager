@@ -9,7 +9,7 @@
 					<a class="btn" v-on:click="destroy(product)">Supprimer</a> 
 				</small>
                 <div class="pull-right">
-    				<span class="label label-success">{{ product.pivot.price }} DA</span>
+    				<span class="label label-success">{{ product.pivot.unite_price }} DA</span>
                     <span class="label label-primary">{{ product.pivot.quantity }} kg</span>
                 </div>
 	        </li>
@@ -22,8 +22,13 @@
             </select>
             <span class="input-group-btn"></span>
             <input type="number" class="form-control" placeholder="quantity" v-model="quantity">
+            <span class="input-group-addon">kg</span>
            	<span class="input-group-btn"></span>
-		    <input type="number" class="form-control" placeholder="price" v-model="price">
+		    <input type="number" class="form-control" placeholder="price" v-model="unite_price">
+            <span class="input-group-addon">DA</span>
+            <span class="input-group-addon">Total : 
+                {{ quantity * unite_price }} DA
+            </span>
 	    	<span class="input-group-btn">
 		        <button class="btn btn-success" type="button" v-on:click="add()">Ajouter!</button>
 		    </span>
@@ -64,6 +69,7 @@
         	add() {
         		this.product.pivot = {
         			quantity: this.quantity,
+                    unite_price: this.unite_price,
                     price: this.price
         		}
         		//this.products.push(this.product)

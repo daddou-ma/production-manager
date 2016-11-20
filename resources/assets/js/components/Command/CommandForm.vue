@@ -40,7 +40,7 @@
                                 </option>
                             </select>
                             <span class="input-group-btn"></span>
-                            <select v-model="command.year" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                            <select v-model="command.year" class="form-control" aria-describedby="name" v-validate data-rules="required" name="product">
                                 <option v-for="year in years" v-bind:value="year.id">
                                 {{ year.name }}
                                 </option>

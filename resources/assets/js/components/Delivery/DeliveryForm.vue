@@ -51,6 +51,21 @@
                                 <input type="checkbox" aria-label="etats" v-model="delivery.stats">
                             </span>
                         </div><br/>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="nrc">Mantant (hors taxes) : </span>
+                            <input type="text" class="form-control" v-model="delivery.total_notax">
+                            <span class="input-group-addon">DA</span>
+                        </div><br/>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="nrc">taux dounane : </span>
+                            <input type="text"  class="form-control" v-model="delivery.taux_douane">
+                            <span class="input-group-addon">%</span>
+                        </div><br/>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="nrc">mantant (TTC) : </span>
+                            <input type="text" class="form-control" v-model="delivery.total_price">
+                            <span class="input-group-addon">DA</span>
+                        </div><br/>
                     </form>
                 </div>
                 <div class="tab-pane section" id="product">
