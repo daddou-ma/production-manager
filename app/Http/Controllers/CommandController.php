@@ -75,10 +75,9 @@ class CommandController extends Controller
                 'taux_achat' => $taux_achat,
                 'calculed_price' => $calculed_price
             ];
-            $
             $mat = material::find($material['id']);
             $mat->quantity = $pro->quantity + $material['pivot']['quantity'];
-            $mat->quantity = ($mat->quantity + $calculed_price) /2
+            $mat->quantity = ($mat->quantity + $calculed_price) /2;
             $mat->save();
             $total_ttc = $total_ttc + $taux_achat;
         }
