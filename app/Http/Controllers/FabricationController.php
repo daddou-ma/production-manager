@@ -21,9 +21,10 @@ class FabricationController extends Controller
      */
     public function index()
     {
-        //
+        // get all fabrications
         $fabrications = Fabrication::with(['product'])->ordered(true)->get();
 
+        // return fabrications as json
         return $fabrications->toJson();
     }
 
@@ -45,19 +46,22 @@ class FabricationController extends Controller
      */
     public function store(FabricationRequest $request)
     {
-        //
+        // create new fabrication
         $fabrication = Fabrication::create($request->all());
 
+        // add quantite produced to the product quantity
         $product = Product::with(['materials'])->find($fabrication->product_id);
         $product->quantity = $product->quantity + $fabrication->quantity * 1000;
         $product->save();
 
+        // for each material used to produce the product substract from quantity
         foreach ($product->materials as $mat) {
             $material = Material::find($mat->id);
             $material->quantity = $material->quantity - ($mat->pivot->quantity * $fabrication->quantity);
             $material->save();
         } 
 
+        // return fabrication as json
         return $fabrication->toJson();
     }
 
@@ -69,9 +73,10 @@ class FabricationController extends Controller
      */
     public function show($id)
     {
-        //
+        // get fabrication by id
         $fabrications = Fabrication::with(['client','product'])->find($id);
 
+        // return fabrication as json
         return $fabrications->toJson();
     }
 
@@ -95,13 +100,18 @@ class FabricationController extends Controller
      */
     public function update(FabricationRequest $request, $id)
     {
-        //
+        // get fabrication by id
         $fabrication = Fabrication::find($id);
 
+        /*
+        *   Before Updating Th Fabrication
+        */
+        // soustract the old quantity produced from the actual one
         $product = Product::with(['materials'])->find($fabrication->product_id);
         $product->quantity = $product->quantity - $fabrication->quantity * 1000;
         $product->save();
 
+        // soustract the old quantity produced from the actual one
         foreach ($product->materials as $mat) {
             $material = Material::find($mat->id);
             $material->quantity = $material->quantity + ($mat->pivot->quantity * $fabrication->quantity);

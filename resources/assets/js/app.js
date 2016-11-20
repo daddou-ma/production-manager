@@ -21,7 +21,7 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 Vue.use(VeeValidate)
 Vue.use(VueRouter)
 
-Vue.http.options.root = 'http://gestion-pro.herokuapp.com/public/'
+Vue.http.options.root = 'http://gestion-pro.herokuapp.com/'
 
 /*var bus = new Vue();
 

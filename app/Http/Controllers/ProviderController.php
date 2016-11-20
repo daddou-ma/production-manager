@@ -19,9 +19,10 @@ class ProviderController extends Controller
      */
     public function index()
     {
-        //
+        // get all providers as json 
         $providers = Provider::with(['commands.materials'])->ordered(true)->get();
 
+        // return providers as json
         return $providers->toJson();
     }
 
@@ -43,17 +44,10 @@ class ProviderController extends Controller
      */
     public function store(ProviderRequest $request)
     {
-        //
+        // create a provider
         $provider = Provider::create($request->all());
-        /*$provider->full_name = $request->full_name;
-        $provider->nrc = $request->nrc;
-        $provider->nif = $request->nif;
-        $provider->na = $request->na;
-        $provider->address = $request->address;
-        $provider->phone = $request->phone;
-        $provider->fax = $request->fax;*/
-        //$provider->save();
 
+        // return provider created as json
         return $provider->toJson();
     }
 
@@ -65,9 +59,10 @@ class ProviderController extends Controller
      */
     public function show($id)
     {
-        //
+        // get a client by id
         $providers = Provider::with(['commands.materials'])->find($id);
 
+        // return the provider as json
         return $providers->toJson();
     }
 
@@ -91,9 +86,11 @@ class ProviderController extends Controller
      */
     public function update(ProviderRequest $request, $id)
     {
-        //
+        // find provider and updating it
         $provider = Provider::find($id);
         $provider->update($request->all());
+
+        // return updated provider as json
         return $provider->toJson();
     }
 
@@ -105,11 +102,12 @@ class ProviderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // find provider by id and deleting it by set actif to false
         $provider = Provider::find($id);
         $provider->actif = false;
         $provider->save();
 
+        // return deleted provider as json
         return $provider->toJson();
     }
 }

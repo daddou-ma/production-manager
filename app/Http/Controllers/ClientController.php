@@ -19,22 +19,17 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        // get all clients 
         $clients = Client::with(['deliveries.products'])->ordered(true)->get();
 
+        // return clients as json
         return $clients->toJson();
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\ResponseAhhhh Super ￼
-haka kayan deux AIESECer fi uDev lol
-bon wehed ex@
-lol
-￼
-Mdr
-mais manich wehdi
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -49,17 +44,14 @@ mais manich wehdi
      */
     public function store(ClientRequest $request)
     {
-        //
+        // Create the new client
         $client = Client::create($request->all());
-        /*$client->full_name = $request->full_name;
-        $client->nrc = $request->nrc;
-        $client->nif = $request->nif;
-        $client->na = $request->na;
-        $client->address = $request->address;
-        $client->phone = $request->phone;
-        $client->fax = $request->fax;*/
-        //$client->save();
 
+        // update the deliveries count in the client table
+        $client->count_deliveries = $client->deliveries()->count();
+        $client->save();
+
+        // return the client json
         return $client->toJson();
     }
 
@@ -71,9 +63,10 @@ mais manich wehdi
      */
     public function show($id)
     {
-        //
+        // get a client by id
         $clients = Client::with(['deliveries.products'])->find($id);
 
+        // return client as json
         return $clients->toJson();
     }
 
@@ -97,9 +90,15 @@ mais manich wehdi
      */
     public function update(ClientRequest $request, $id)
     {
-        //
+        // find the client by id and update it
         $client = Client::find($id);
         $client->update($request->all());
+
+        // update the deliveries count in the client table
+        $client->count_deliveries = $client->deliveries()->count();
+        $client->save();
+
+        // return client as json
         return $client->toJson();
     }
 
@@ -111,11 +110,12 @@ mais manich wehdi
      */
     public function destroy($id)
     {
-        //
+        // find client by id and deleting it by set actif to false
         $client = Client::find($id);
         $client->actif = false;
         $client->save();
 
+        // return client deleted as json
         return $client->toJson();
     }
 }
