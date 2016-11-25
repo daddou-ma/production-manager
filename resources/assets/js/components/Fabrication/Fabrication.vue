@@ -16,12 +16,12 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr class="info">
-                        <th>Id</th>
-                        <th>Nom Produit</th>
-                        <th>Quantite</th>
-                        <th>Etat</th>
-                        <th>Delais</th>
-                        <th>Actions</th>
+                        <th><span class="glyphicon glyphicon-tag" aria-hidden="true"></span>  Id</th>
+                        <th><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>  Nom Produit</th>
+                        <th><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>  Quantite</th>
+                        <th><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Embalage</th>
+                        <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Delais</th>
+                        <th><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +29,7 @@
                         <td><span class="label label-default">{{ fabrication.id }}</span></td>
                         <td>{{ fabrication.product.name }}</td>
                         <td>{{ fabrication.quantity }}</td>
-                        <td>{{ fabrication.stats }}</td>
+                        <td>{{ fabrication.embalage }}</td>
                         <td>{{ fabrication.fabrication_date }}</td>
                         <td>
                             <a class="btn btn-default btn-xs" v-on:click="edit(fabrication)">Modifier</a>
@@ -116,7 +116,10 @@
                 this.fabrication = {
                     name: '',
                     unite_price: '',
-                    quantity: ''
+                    quantity: '',
+                    fabrication_date: null,
+                    sac: 0,
+                    embalage: 0
                 }
             },
             create() {

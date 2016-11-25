@@ -8,7 +8,7 @@
         <div slot="modal-body" class="modal-body">
             <ul class="nav nav-pills nav-justified explore">
                 <li role="presentation" class="active"><a href="#general" data-toggle="tab">General</a></li>
-                <li role="presentation"><a href="#delivery" data-toggle="tab">Livraisons</a></li>
+                <li role="presentation"><a href="#delivery" data-toggle="tab"><span class="label label-default">{{ client.count_deliveries }} </span> Livraisons</a></li>
             </ul>
             <div class="tab-content clearfix">
                 <div class="tab-pane active section" id="general">

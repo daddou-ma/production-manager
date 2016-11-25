@@ -58,6 +58,8 @@ class ProductController extends Controller
         }
         $product->materials()->sync($ids);
         $product->count_materials = $product->materials()->count();
+        $product->count_fabrication = $product->fabrications()->count();
+        $product->count_deliveries = $product->deliveries()->count();
         $product->save();
 
         return $product->toJson();
@@ -111,6 +113,8 @@ class ProductController extends Controller
         }
         $product->materials()->sync($ids);
         $product->count_materials = $product->materials()->count();
+        $product->count_fabrication = $product->fabrications()->count();
+        $product->count_deliveries = $product->deliveries()->count();
         $product->save();
         return $product->toJson();
     }

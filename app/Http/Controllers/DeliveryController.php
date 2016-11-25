@@ -49,14 +49,6 @@ class DeliveryController extends Controller
     {
         //
         $delivery = Delivery::create($request->all());
-        /*$delivery->full_name = $request->full_name;
-        $delivery->nrc = $request->nrc;
-        $delivery->nif = $request->nif;
-        $delivery->na = $request->na;
-        $delivery->address = $request->address;
-        $delivery->phone = $request->phone;
-        $delivery->fax = $request->fax;*/
-        //$delivery->save();
 
         $products = Input::get('products');
 
@@ -71,7 +63,9 @@ class DeliveryController extends Controller
             ];
             $pro = Product::find($product['id']);
             $pro->quantity = $pro->quantity - $product['pivot']['quantity'];
+            $pro->count_deliveries = $pro->deliveries()->count();
             $pro->save();
+
             $total_nt = $total_nt + $product['pivot']['unite_price']*$product['pivot']['quantity'];
         }
         $delivery->products()->attach($ids);
@@ -147,7 +141,9 @@ class DeliveryController extends Controller
             ];
             $pro = Product::find($product['id']);
             $pro->quantity = $pro->quantity - $product['pivot']['quantity'];
+            $pro->count_deliveries = $pro->deliveries()->count();
             $pro->save();
+
             $total_nt = $total_nt + $product['pivot']['unite_price']*$product['pivot']['quantity'];
         }
         $delivery->products()->attach($ids);
@@ -172,11 +168,15 @@ class DeliveryController extends Controller
         $delivery->actif = false;
         $delivery->save();
 
+        $delivery->products()->detach();
+        $delivery->count_products = $delivery->products()->count();
+        $delivery->save();
+
         foreach ($delivery->products as $product) {
             $product->quantity = $product->quantity + $product->pivot->quantity;
+            $product->count_deliveries = $product->deliveries()->count();
             $product->save();
         }
-        $delivery->products()->detach();
 
         return $delivery->toJson();
     }

@@ -19,6 +19,12 @@ body {
 	border-top: none;
 }
 
+.section-one {
+	background: #F5F5F5;
+	padding: 10px;
+	border: 1px solid #E0E0E0;
+}
+
 .explore > li.active > a {
 	border: 1px solid #E0E0E0;
 	border-bottom: 1px solid #f3f0f0;
@@ -27,4 +33,58 @@ body {
 .explore > li:not(.active) > a {
 	border: none;
 	border-bottom: 1px solid #E0E0E0;
+}
+
+.fact {
+	margin-bottom: 15px;
+	width: 100%;
+	border: 1px solid #000;	
+
+	td,th {
+		border: 1px solid #000;
+		padding: 7px 8px;
+	}
+}
+
+.print {
+	padding: 0px 30px;
+	.head {
+		border-bottom: 1px solid #000;
+	}
+	.body {
+		margin-bottom: 30px;
+		padding: 30px 0;
+
+		h2 {
+			text-align: center;
+			margin-bottom: 50px;
+		}
+
+		.info {
+			padding: 15px;
+			border: 1px solid #000;
+			border-radius: 4px;
+		}
+	}
+	.foot {
+		margin-top: 150px;
+		padding-top: 15px;
+		border-top: 1px solid #000;
+	}
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+    position: none;
+  }
+  .print, .print * {
+    visibility: visible;
+  }
+  .print {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+  }
 }

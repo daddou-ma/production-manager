@@ -47,6 +47,9 @@ class ProviderController extends Controller
         // create a provider
         $provider = Provider::create($request->all());
 
+        $provider->count_commands = $provider->commands()->count();
+        $provider->save();
+
         // return provider created as json
         return $provider->toJson();
     }
@@ -105,6 +108,9 @@ class ProviderController extends Controller
         // find provider by id and deleting it by set actif to false
         $provider = Provider::find($id);
         $provider->actif = false;
+        $provider->save();
+
+        $provider->count_commands = $provider->commands()->count();
         $provider->save();
 
         // return deleted provider as json

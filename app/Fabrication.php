@@ -8,7 +8,7 @@ class Fabrication extends Model
 {
     //
 
-    protected $fillable = ['product_id', 'fabrication_date', 'quantity', 'progress', 'stats', 'actif'];
+    protected $fillable = ['product_id', 'fabrication_date', 'quantity', 'embalage', 'sac', 'stats', 'actif'];
 	protected $guarded = [];
 
 	protected $orderBy = 'created_at';

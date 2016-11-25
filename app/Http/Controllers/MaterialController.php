@@ -45,14 +45,9 @@ class MaterialController extends Controller
     {
         //
         $material = Material::create($request->all());
-        /*$material->full_name = $request->full_name;
-        $material->nrc = $request->nrc;
-        $material->nif = $request->nif;
-        $material->na = $request->na;
-        $material->address = $request->address;
-        $material->phone = $request->phone;
-        $material->fax = $request->fax;*/
-        //$material->save();
+        
+        $material->count_commands = $material->commands()->count();
+        $material->save();
 
         return $material->toJson();
     }
@@ -94,6 +89,10 @@ class MaterialController extends Controller
         //
         $material = Material::find($id);
         $material->update($request->all());
+
+        $material->count_commands = $material->commands()->count();
+        $material->save();
+        
         return $material->toJson();
     }
 

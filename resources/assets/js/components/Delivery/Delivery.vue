@@ -1,6 +1,8 @@
 <template>
     <div>
         <delivery-form v-bind:delivery="delivery" v-bind:form="form"></delivery-form>
+        <delivery-print v-bind:delivery="delivery" v-bind:print="print"></delivery-print>
+
         <message v-bind:confirm="confirm"></message>
 
         <div class="panel panel-default">
@@ -36,6 +38,7 @@
                         <td>{{ delivery.quantity }}</td>
                         <td>{{ delivery.delivery_date }}</td>
                         <td>
+                            <a class="btn btn-default btn-xs" v-on:click="_print(delivery)">Imprimer</a>
                             <a class="btn btn-default btn-xs" v-on:click="edit(delivery)">Modifier</a>
                             <a class="btn btn-danger btn-xs" v-on:click="_delete(delivery)">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -56,6 +59,7 @@
                     name: '',
                     unite_price: '',
                     quantity: '',
+                    client: {},
                     products: [],
                     count_products: 0,
                     delivery_date: 0,
@@ -81,6 +85,11 @@
                     success: false,
                     error: false,
                     errors: [],
+                    show: false,
+                    validate: function () {},
+                    cancel: function () {},
+                },
+                print: {
                     show: false,
                     validate: function () {},
                     cancel: function () {},
@@ -123,6 +132,7 @@
                     name: '',
                     unite_price: '',
                     quantity: '',
+                    client: {},
                     products: [],
                     count_products: 0,
                     delivery_date: 0,
@@ -202,6 +212,19 @@
                                 form.show = true
                             }
                         }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
+                }
+            },
+            _print($delivery) {
+                this.delivery = $delivery
+                this.print = {
+                    show: true,
+                    validate: function () {
+                        window.print();
+                        console.log("imprimeree");
                     },
                     cancel: function () {
                         this.show = false

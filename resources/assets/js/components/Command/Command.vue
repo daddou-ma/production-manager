@@ -1,6 +1,8 @@
 <template>
     <div>
         <command-form v-bind:command="command" v-bind:form="form"></command-form>
+        <command-print v-bind:command="command" v-bind:print="print"></command-print>
+
         <message v-bind:confirm="confirm"></message>
 
         <div class="panel panel-default">
@@ -36,6 +38,7 @@
                         <td>{{ command.quantity }}</td>
                         <td>{{ command.command_date }}</td>
                         <td>
+                            <a class="btn btn-default btn-xs" v-on:click="_print(command)">Imprimer</a>
                             <a class="btn btn-default btn-xs" v-on:click="edit(command)">Modifier</a>
                             <a class="btn btn-danger btn-xs" v-on:click="_delete(command)">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -52,12 +55,7 @@
     export default {
         data() {
             return {
-                command: {
-                    name: '',
-                    unite_price: '',
-                    quantity: '',
-                    materials: []
-                },
+                command: {},
                 form : {
                     title: '',
                     content: '',
@@ -76,6 +74,11 @@
                     success: false,
                     error: false,
                     errors: [],
+                    show: false,
+                    validate: function () {},
+                    cancel: function () {},
+                },
+                print: {
                     show: false,
                     validate: function () {},
                     cancel: function () {},
@@ -118,6 +121,7 @@
                     name: '',
                     unite_price: '',
                     quantity: '',
+                    provider: {},
                     materials: []
                 }
             },
@@ -192,6 +196,19 @@
                                 form.show = true
                             }
                         }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
+                }
+            },
+            _print($command) {
+                this.command = $command
+                this.print = {
+                    show: true,
+                    validate: function () {
+                        window.print();
+                        console.log("imprimeree");
                     },
                     cancel: function () {
                         this.show = false

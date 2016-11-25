@@ -12,8 +12,11 @@
                 <li role="presentation"><a href="#material" data-toggle="tab">Matiere 1er
                 <span class="label label-default">{{ product.count_materials }} </span>
                 </a></li>
-                <li role="presentation"><a href="#fabrication" data-toggle="tab">Fabrication</a></li>
-                <li role="presentation"><a href="#delivery" data-toggle="tab">Livraisons</a></li>
+                <li role="presentation"><a href="#fabrication" data-toggle="tab">Fabrication 
+                <span class="label label-default">{{ product.count_fabrication }} </span></a></li>
+                <li role="presentation"><a href="#delivery" data-toggle="tab">Livraisons 
+                <span class="label label-default">{{ product.count_deliveries }} </span>
+                </a></li>
 
             </ul>
             <div class="tab-content clearfix">

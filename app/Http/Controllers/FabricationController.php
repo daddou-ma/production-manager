@@ -51,7 +51,8 @@ class FabricationController extends Controller
 
         // add quantite produced to the product quantity
         $product = Product::with(['materials'])->find($fabrication->product_id);
-        $product->quantity = $product->quantity + $fabrication->quantity * 1000;
+        $product->quantity = $product->quantity + $fabrication->quantity*1000;
+        $product->count_fabrication = $product->fabrications()->count();
         $product->save();
 
         // for each material used to produce the product substract from quantity
@@ -106,29 +107,40 @@ class FabricationController extends Controller
         /*
         *   Before Updating Th Fabrication
         */
-        // soustract the old quantity produced from the actual one
+        // subtract the old quantity produced from the actual one
         $product = Product::with(['materials'])->find($fabrication->product_id);
-        $product->quantity = $product->quantity - $fabrication->quantity * 1000;
+        $product->quantity = $product->quantity - $fabrication->quantity*1000;
+        $product->count_fabrication = $product->fabrications()->count();
         $product->save();
 
-        // soustract the old quantity produced from the actual one
+        // adding the old quantity of the mater$product->count_fabrications = $product->fabrications()->count();ials to the actual one
         foreach ($product->materials as $mat) {
             $material = Material::find($mat->id);
             $material->quantity = $material->quantity + ($mat->pivot->quantity * $fabrication->quantity);
             $material->save();
         }
 
+        /*
+        *   Updating Thr Fabrication
+        */
         $fabrication->update($request->all());
 
-        $product->quantity = $product->quantity + $fabrication->quantity * 1000;
+        /*
+        *   After Updating The Fabrication
+        */
+        // adding the old quantity produced to the actual one
+        $product->quantity = $product->quantity + $fabrication->quantity*1000;
+        $product->count_fabrication = $product->fabrications()->count();
         $product->save();
 
+        // subtracting the old quantity of the materials from the actual one
         foreach ($product->materials as $mat) {
             $material = Material::find($mat->id);
             $material->quantity = $material->quantity - ($mat->pivot->quantity * $fabrication->quantity);
             $material->save();
         }
 
+        // return the edited fabrication
         return $fabrication->toJson();
     }
 
@@ -140,21 +152,28 @@ class FabricationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // find fabrication and deleting it by seting actif false
         $fabrication = Fabrication::find($id);
         $fabrication->actif = false;
         $fabrication->save();
 
+        /*
+        *   After Deleting The Fabrication
+        */
+        // subtract the old quantity produced from the actual one
         $product = Product::with(['materials'])->find($fabrication->product_id);
-        $product->quantity = $product->quantity - $fabrication->quantity * 1000;
+        $product->quantity = $product->quantity - $fabrication->quantity*1000;
+        $product->count_fabrication = $product->fabrications()->count();
         $product->save();
 
+        // adding the old quantity of the materials to the actual one
         foreach ($product->materials as $mat) {
             $material = Material::find($mat->id);
             $material->quantity = $material->quantity + ($mat->pivot->quantity * $fabrication->quantity);
             $material->save();
         }
 
+        // return the deleted fabrication
         return $fabrication->toJson();
     }
 }

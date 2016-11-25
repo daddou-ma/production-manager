@@ -9,7 +9,8 @@
         <div slot="modal-body" class="modal-body">
             <ul class="nav nav-pills nav-justified explore">
                 <li role="presentation" class="active"><a href="#general" data-toggle="tab">General</a></li>
-                <li role="presentation"><a href="#command" data-toggle="tab">Commandes</a></li>
+                <li role="presentation"><a href="#command" data-toggle="tab"><span class="label label-default">{{ material.count_commands }} </span>
+                Commandes</a></li>
 
             </ul>
             <div class="tab-content clearfix">

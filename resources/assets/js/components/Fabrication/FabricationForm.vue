@@ -54,6 +54,18 @@
                             <input type="number" class="form-control" v-model="fabrication.quantity" aria-describedby="nif" min="0" placeholder="Quantite en kg">
                             <span class="input-group-addon"> kg</span>
                         </div><br/>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-th" aria-hidden="true"></span> Embalage :</span>
+                            <input type="number" class="form-control" v-model="fabrication.embalage" aria-describedby="nif" min="0" placeholder="Embalage">
+                            <span class="input-group-addon"> kg</span>
+                        </div><br/>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="nrc">
+                            <span class="glyphicon glyphicon-th" aria-hidden="true"></span> SAC :</span>
+                            <input type="number" class="form-control" v-model="fabrication.sac" aria-describedby="nif" min="0" placeholder="SAC">
+                            <span class="input-group-addon"> kg</span>
+                        </div><br/>
                     </form>
                 </div>
             </div>

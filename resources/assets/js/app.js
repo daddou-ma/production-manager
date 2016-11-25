@@ -55,10 +55,12 @@ const FabricationForm = require('./components/Fabrication/FabricationForm.vue');
 const Command = require('./components/Command/Command.vue');
 const CommandForm = require('./components/Command/CommandForm.vue');
 const CommandMaterial = require('./components/Command/CommandMaterial.vue');
+const CommandPrint = require('./components/Command/CommandPrint.vue');
 
 const Delivery = require('./components/Delivery/Delivery.vue');
 const DeliveryForm = require('./components/Delivery/DeliveryForm.vue');
 const DeliveryProduct = require('./components/Delivery/DeliveryProduct.vue');
+const DeliveryPrint = require('./components/Delivery/DeliveryPrint.vue');
 
 const Message =  require('./components/Message.vue');
 
@@ -90,10 +92,12 @@ Vue.component('fabrication-form', FabricationForm);
 Vue.component('command', Command);
 Vue.component('command-form', CommandForm);
 Vue.component('command-material', CommandMaterial);
+Vue.component('command-print', CommandPrint);
 
 Vue.component('delivery', Delivery);
 Vue.component('delivery-form', DeliveryForm);
 Vue.component('delivery-product', DeliveryProduct);
+Vue.component('delivery-print', DeliveryPrint);
 
 Vue.component('message', Message);
 

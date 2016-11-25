@@ -61,6 +61,7 @@ class CommandController extends Controller
             $taux_euro = $mantant_facture + $material['pivot']['pret'];
             $taux_dinars = $taux_euro * $material['pivot']['euro_dinars'];
             $taux_achat = $taux_dinars + ($taux_dinars * $material['pivot']['taux_douane'] / 100) + $material['pivot']['transit_fees'];
+
             $calculed_price = $taux_achat / $material['pivot']['quantity'];
             //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
             $ids[$material['id']] = ['quantity' => $material['pivot']['quantity'],
@@ -76,8 +77,8 @@ class CommandController extends Controller
                 'calculed_price' => $calculed_price
             ];
             $mat = material::find($material['id']);
-            $mat->quantity = $pro->quantity + $material['pivot']['quantity'];
-            $mat->quantity = ($mat->quantity + $calculed_price) /2;
+            $mat->quantity = $mat->quantity + $material['pivot']['quantity'];
+            $mat->unite_price = ($mat->unite_price + $calculed_price) /2;
             $mat->save();
             $total_ttc = $total_ttc + $taux_achat;
         }
@@ -161,24 +162,39 @@ class CommandController extends Controller
         }
         $command->materials()->detach();
 
+        $ids = array();
+        $total_ttc = 0;
+
         foreach ($materials as $material) {
-            $mat = Material::find($material['id']);
-            if ($mat->quantity < $material['pivot']['quantity']) {
-                $quantity = $mat->quantity;
-            }
-            else {
-                $quantity = $material['pivot']['quantity'];
-            }
-            
-            $ids[$material['id']] = ['quantity' => $quantity,
-                'price' => $material['pivot']['price']
+            # code...
+            $mantant_facture = $material['pivot']['unite_price']*$material['pivot']['quantity'];
+            $taux_euro = $mantant_facture + $material['pivot']['pret'];
+            $taux_dinars = $taux_euro * $material['pivot']['euro_dinars'];
+            $taux_achat = $taux_dinars + ($taux_dinars * $material['pivot']['taux_douane'] / 100) + $material['pivot']['transit_fees'];
+
+            $calculed_price = $taux_achat / $material['pivot']['quantity'];
+            //array_push($ids, [$material['id'] => ['quantity' => $material['pivot']['quantity']]]);
+            $ids[$material['id']] = ['quantity' => $material['pivot']['quantity'],
+                'unite_price' => $material['pivot']['unite_price'],
+                'mantant_facture' => $mantant_facture,
+                'pret' => $material['pivot']['pret'],
+                'taux_euro' => $taux_euro,
+                'euro_dinars' => $material['pivot']['euro_dinars'],
+                'taux_dinars' => $taux_dinars,
+                'taux_douane' => $material['pivot']['taux_douane'],
+                'transit_fees' => $material['pivot']['transit_fees'],
+                'taux_achat' => $taux_achat,
+                'calculed_price' => $calculed_price
             ];
-            
-            $mat->quantity = $mat->quantity - $quantity;
+            $mat = material::find($material['id']);
+            $mat->quantity = $mat->quantity + $material['pivot']['quantity'];
+            $mat->unite_price = ($mat->unite_price + $calculed_price) /2;
             $mat->save();
+            $total_ttc = $total_ttc + $taux_achat;
         }
         $command->materials()->attach($ids);
         $command->count_materials = $command->materials()->count();
+        $command->total_price = $total_ttc;
         $command->save();
         return $command->toJson();
     }
@@ -195,6 +211,16 @@ class CommandController extends Controller
         $command = Command::find($id);
         $command->actif = false;
         $command->save();
+
+        $command->materials()->detach();
+        $command->count_materials = $command->materials()->count();
+        $command->save();
+
+        foreach ($command->materials as $material) {
+            $material->quantity = $material->quantity + $material->pivot->quantity;
+            $material->count_deliveries = $material->deliveries()->count();
+            $material->save();
+        }
 
         return $command->toJson();
     }

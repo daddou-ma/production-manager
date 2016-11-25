@@ -1,60 +1,60 @@
 
 <template>
-    <modal title="Modal" v-bind:show.sync="form.show" effect="fade" width="800" v-bind:backdrop="false">
+    <modal title="Modal" v-bind:show.sync="form.show" effect="fade" width="80%" v-bind:backdrop="false">
         <div slot="modal-header" class="modal-header">
             <h4 class="modal-title">
                 <b>{{ form.title }}</b> 
             </h4>
          </div>
         <div slot="modal-body" class="modal-body">
-            <ul class="nav nav-pills nav-justified explore">
-                <li role="presentation" class="active"><a href="#general" data-toggle="tab">General</a></li>
-                <li role="presentation"><a href="#material" data-toggle="tab">Matieres</a></li>
-            </ul>
-            <div class="tab-content clearfix">
-                <div class="tab-pane active section" id="general">
+            <div class="row">
+                <div class="col-md-12">
                     <p> {{ form.content }} </p>
                     <form>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="name">Fournisseur 
-                                <span class="text-danger">( * )</span> : 
-                            </span>
-                            <select v-model="command.provider_id" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                              <option v-for="provider in providers" v-bind:value="provider.id">
-                                {{ provider.full_name }}
-                              </option>
-                            </select>
-                        </div><br>
-                        <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span><br/>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Date de recevoir :</span>
-                            <select v-model="command.day" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                                <option v-for="day in days" v-bind:value="day.id">
-                                {{ day.name }}
-                                </option>
-                            </select>
-                            <span class="input-group-btn"></span>
-                            <select v-model="command.month" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                                <option v-for="month in months" v-bind:value="month.id">
-                                {{ month.name }}
-                                </option>
-                            </select>
-                            <span class="input-group-btn"></span>
-                            <select v-model="command.year" class="form-control" aria-describedby="name" v-validate data-rules="required" name="product">
-                                <option v-for="year in years" v-bind:value="year.id">
-                                {{ year.name }}
-                                </option>
-                            </select>
-                        </div><br/>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Etat (Recu ?) :
-                                <input type="checkbox" aria-label="etats" v-model="command.stats">
-                            </span>
-                        </div><br/>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon" id="name">Fournisseur 
+                                        <span class="text-danger">( * )</span> : 
+                                    </span>
+                                    <select v-model="command.provider_id" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                                      <option v-for="provider in providers" v-bind:value="provider.id">
+                                        {{ provider.full_name }}
+                                      </option>
+                                    </select>
+                                </div><br>
+                                <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span><br/>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon" id="nrc">Date de recevoir <span class="text-danger">( * )</span> : </span>
+                                    <select v-model="command.day" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                                        <option v-for="day in days" v-bind:value="day.id">
+                                        {{ day.name }}
+                                        </option>
+                                    </select>
+                                    <span class="input-group-btn"></span>
+                                    <select v-model="command.month" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                                        <option v-for="month in months" v-bind:value="month.id">
+                                        {{ month.name }}
+                                        </option>
+                                    </select>
+                                    <span class="input-group-btn"></span>
+                                    <select v-model="command.year" class="form-control" aria-describedby="name" v-validate data-rules="required" name="product">
+                                        <option v-for="year in years" v-bind:value="year.id">
+                                        {{ year.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
-                <div class="tab-pane section" id="material">
-                    <command-material v-on:add="addMaterial" v-on:destroy="deleteMaterial":materials="command.materials"></command-material>
+                <div class="col-md-12">
+                    <div class="section-one">
+                        <command-material v-on:add="addMaterial" v-on:destroy="deleteMaterial":materials="command.materials"></command-material>
+                    </div>
                 </div>
             </div>
         </div>

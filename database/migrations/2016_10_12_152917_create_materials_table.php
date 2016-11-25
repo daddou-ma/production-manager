@@ -19,7 +19,7 @@ class CreateMaterialsTable extends Migration
             $table->string('name');
             $table->bigInteger('quantity')->default(0);
             $table->float('unite_price');
-            //$table->integer('count_commands')->default(0);
+            $table->integer('count_commands')->default(0);
 
             $table->boolean('actif')->default(true);
             $table->timestamps();

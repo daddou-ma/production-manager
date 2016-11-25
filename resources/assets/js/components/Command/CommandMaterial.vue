@@ -1,59 +1,102 @@
 <template>
 	<div>
-		<div class="list-group">
-	        <li href="#" class="list-group-item" v-for="material in materials">
-	        	<span class="label label-default">{{ material.id }}</span>
-				{{ material.name }}<br>
-				<small>
-					<a href="#">modifier</a>
-					<a class="btn" v-on:click="destroy(material)">Supprimer</a> 
-				</small>
-                <div class="pull-right">
-    				<span class="label label-success">{{ material.pivot.price }} DA</span>
-                    <span class="label label-primary">{{ material.pivot.quantity }} kg</span>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Material </span>
+                            <select class="form-control" v-model="material" aria-describedby="name" v-validate data-rules="required" name="product" placeholder="Product">
+                                <option v-for="material in materialsList" v-bind:value="material">
+                                {{ material.name }}
+                                </option>
+                            </select>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Quantite </span>
+                            <input type="number" class="form-control" placeholder="quantite" v-model="quantity">
+                            <span class="input-group-addon">kg</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Prix Unitaire </span>
+                            <input type="number" class="form-control" placeholder="prix" v-model="unite_price">
+                            <span class="input-group-addon">Euro/Kg</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Mantant Facture : {{ f_mantant }}</span>
+                            <span class="input-group-addon">Euro</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">PRET </span>
+                            <input type="number" class="form-control" placeholder="PRET" v-model="pret">
+                            <span class="input-group-addon">Euro</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Mantant Euro : {{ euro_mantant }}</span>
+                            <span class="input-group-addon">Euro</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Euro -> Dinars </span>
+                            <input type="number" class="form-control" placeholder="Euro -> Dinars" v-model="euro_dinars">
+                            <span class="input-group-addon">DA</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Assiette : {{ da_mantant }}</span>
+                            <span class="input-group-addon">DA</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Taux Douane </span>
+                            <input type="number" class="form-control" placeholder="Taux Douane" v-model="taux_douane">
+                            <span class="input-group-addon">%</span>
+                            <span class="input-group-addon">{{ total_douane }} DA</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Frais Transit </span>
+                            <input type="number" class="form-control" placeholder="Frais Transit" v-model="transit_fees">
+                            <span class="input-group-addon">DA</span>
+                        </div><br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Total : </span>
+                            <span class="input-group-addon"> 
+                                {{ total }} DA
+                            </span>
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" type="button" v-on:click="add()">Ajouter!</button>
+                            </span>
+                        </div><br>
+
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">Calculed Price : {{calculed_price}}</span>
+                            <span class="input-group-addon">New Price : {{new_price}}</span>
+                        </div>
+                    </div>
                 </div>
-	        </li>
-	    </div>
-        <div class="input-group input-group-sm">
-            <select class="form-control" v-model="material" aria-describedby="name" v-validate data-rules="required" name="product" placeholder="Product">
-                <option v-for="material in materialsList" v-bind:value="material">
-                {{ material.name }}
-                </option>
-            </select>
-            <span class="input-group-btn"></span>
-            <input type="number" class="form-control" placeholder="quantite" v-model="quantity">
-            <span class="input-group-addon">kg</span>
-            <span class="input-group-btn"></span>
-            <input type="number" class="form-control" placeholder="prix" v-model="unite_price">
-            <span class="input-group-addon">DA/kg</span>
-        </div><br>
-        <div class="input-group input-group-sm">
-            <span class="input-group-btn"></span>
-            <input type="number" class="form-control" placeholder="PRET" v-model="pret">
-            <span class="input-group-addon">DA</span>
-            <span class="input-group-btn"></span>
-            <input type="number" class="form-control" placeholder="Euro -> Dinars" v-model="euro_dinars">
-            <span class="input-group-addon">DA</span>
-        </div><br>
-	    <div class="input-group input-group-sm">
-            <span class="input-group-btn"></span>
-            <input type="number" class="form-control" placeholder="Taux Douane" v-model="taux_douane">
-            <span class="input-group-addon">%</span>
-            <span class="input-group-btn"></span>
-            <input type="number" class="form-control" placeholder="Frais Transit" v-model="transit_fees">
-            <span class="input-group-addon">DA</span>
-            <span class="input-group-btn"></span>
-            <span class="input-group-addon">Total : 
-                {{ quantity * price }} DA
-            </span>
-	    	<span class="input-group-btn">
-		        <button class="btn btn-success" type="button" v-on:click="add()">Ajouter!</button>
-		    </span>
-	    </div>
-        <div v-if="material">
-            <b>Matiere : </b>{{ material.name }}<br>
-            <b>Quantite Disponible: </b>{{ material.quantity }}<br>
-            <b>Prix Unitaire : </b>{{ material.unite_price }}<br>
+                <hr>
+                <div v-if="material">
+                    <b>Matiere : </b>{{ material.name }}<br>
+                    <b>Quantite Disponible: </b>{{ material.quantity }}<br>
+                    <b>Prix Unitaire : </b>{{ material.unite_price }}<br>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="list-group">
+                    <li href="#" class="list-group-item" v-for="material in materials">
+                        <span class="label label-default">{{ material.id }}</span>
+                        {{ material.name }}
+                        <small>
+                            <a class="btn" v-on:click="destroy(material)">Supprimer</a> 
+                        </small>
+                        <div class="row">
+                            <div class="col-md-6">Prix.U : {{ material.pivot.unite_price }} DA</div>
+                            <div class="col-md-6">Quantite : {{ material.pivot.quantity }} DA</div>
+                            <div class="col-md-6">T.Achat : {{ material.pivot.taux_achat }} DA</div>
+                            <div class="col-md-6">Prix Calulee : {{ material.pivot.calculed_price }} DA</div>
+                        </div>
+                    </li>
+                </div>
+            </div>
         </div>
 	</div>
 </template>
@@ -92,12 +135,37 @@
                 this.materialsList = this.materialsTemp.filter(this.isAdded)
             }
         },
+        computed: {
+            f_mantant: function(){
+                return this.quantity * this.unite_price;
+            },
+            euro_mantant: function(){
+                return this.f_mantant + this.pret;
+            },
+            da_mantant: function(){
+                return this.euro_mantant * this.euro_dinars;
+            },
+            da_douane: function(){
+                return this.da_mantant * this.taux_douane / 100;
+            },
+            total_douane: function(){
+                return this.da_douane + this.da_mantant;
+            },
+            total: function(){
+                return this.total_douane + this.transit_fees;
+            },
+            calculed_price: function(){
+                return this.total / this.quantity;
+            },
+            new_price: function(){
+                return (this.calculed_price + parseFloat(this.material.unite_price)) / 2;
+            }
+        },
         methods: {
         	add() {
         		this.material.pivot = {
         			quantity: this.quantity,
                     unite_price: this.unite_price,
-                    price: this.price,
                     pret: this.pret,
                     euro_dinars: this.euro_dinars,
                     taux_douane: this.taux_douane,
@@ -105,7 +173,7 @@
         		}
         		//this.materials.push(this.material)
                 this.$emit('add', this.material)
-        		this.material = {}
+        		this.material.pivot = {}
         	},
             destroy($material) {
                 //delete this.materials[this.materials.indexOf($material)]
