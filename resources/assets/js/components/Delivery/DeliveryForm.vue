@@ -1,76 +1,65 @@
 
 <template>
-    <modal title="Modal" v-bind:show.sync="form.show" effect="fade" width="800" v-bind:backdrop="false">
+    <modal title="Modal" v-bind:show.sync="form.show" effect="fade" width="80%" v-bind:backdrop="false">
         <div slot="modal-header" class="modal-header">
             <h4 class="modal-title">
                 <b>{{ form.title }}</b> 
             </h4>
          </div>
         <div slot="modal-body" class="modal-body">
-            <ul class="nav nav-pills nav-justified explore">
-                <li role="presentation" class="active"><a href="#general" data-toggle="tab">General</a></li>
-                <li role="presentation"><a href="#product" data-toggle="tab"><span class="label label-default">{{ delivery.count_products }} </span>
-                Produits</a></li>
-            </ul>
-            <div class="tab-content clearfix">
-                <div class="tab-pane active section" id="general">
-                    <p> {{ form.content }} </p>
-                    <form>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="name">Fournisseur 
-                                <span class="text-danger">( * )</span> : 
-                            </span>
-                            <select v-model="delivery.client_id" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                              <option v-for="client in clients" v-bind:value="client.id">
-                                {{ client.full_name }}
-                              </option>
-                            </select>
-                        </div><br>
-                        <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span><br/>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Date de recevoir :</span>
-                            <select v-model="delivery.day" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                                <option v-for="day in days" v-bind:value="day.id">
-                                {{ day.name }}
-                                </option>
-                            </select>
-                            <span class="input-group-btn"></span>
-                            <select v-model="delivery.month" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                                <option v-for="month in months" v-bind:value="month.id">
-                                {{ month.name }}
-                                </option>
-                            </select>
-                            <span class="input-group-btn"></span>
-                            <select v-model="delivery.year" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
-                                <option v-for="year in years" v-bind:value="year.id">
-                                {{ year.name }}
-                                </option>
-                            </select>
-                        </div><br/>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Etat (Recu ?) :
-                                <input type="checkbox" aria-label="etats" v-model="delivery.stats">
-                            </span>
-                        </div><br/>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">Mantant (hors taxes) : </span>
-                            <input type="text" class="form-control" v-model="delivery.total_notax">
-                            <span class="input-group-addon">DA</span>
-                        </div><br/>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">taux dounane : </span>
-                            <input type="text"  class="form-control" v-model="delivery.taux_douane">
-                            <span class="input-group-addon">%</span>
-                        </div><br/>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="nrc">mantant (TTC) : </span>
-                            <input type="text" class="form-control" v-model="delivery.total_price">
-                            <span class="input-group-addon">DA</span>
-                        </div><br/>
-                    </form>
-                </div>
-                <div class="tab-pane section" id="product">
-                    <delivery-product v-on:add="addMaterial" v-on:destroy="deleteMaterial":products="delivery.products"></delivery-product>
+            <div class="section-one">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon" id="name">Fournisseur 
+                                    <span class="text-danger">( * )</span> : 
+                                </span>
+                                <select v-model="delivery.client_id" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                                  <option v-for="client in clients" v-bind:value="client.id">
+                                    {{ client.full_name }}
+                                  </option>
+                                </select>
+                            </div><br>
+                            <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span><br/>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon" id="nrc">Date de recevoir :</span>
+                                <select v-model="delivery.day" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                                    <option v-for="day in days" v-bind:value="day.id">
+                                    {{ day.name }}
+                                    </option>
+                                </select>
+                                <span class="input-group-btn"></span>
+                                <select v-model="delivery.month" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                                    <option v-for="month in months" v-bind:value="month.id">
+                                    {{ month.name }}
+                                    </option>
+                                </select>
+                                <span class="input-group-btn"></span>
+                                <select v-model="delivery.year" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
+                                    <option v-for="year in years" v-bind:value="year.id">
+                                    {{ year.name }}
+                                    </option>
+                                </select>
+                            </div><br/>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon" id="nrc">Mantant (hors taxes) : </span>
+                                <span class="input-group-addon">{{ delivery.total_notax }} DA</span>
+                            </div><br/>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon" id="nrc">taux dounane : </span>
+                                <input type="text"  class="form-control" v-model="delivery.taux_douane">
+                                <span class="input-group-addon">%</span>
+                            </div><br/>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon" id="nrc">mantant (TTC) : </span>
+                                <span class="input-group-addon">{{ delivery.total_price }} DA</span>
+                            </div><br/>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <delivery-product v-on:add="addMaterial" v-on:destroy="deleteMaterial":products="delivery.products"></delivery-product>
+                    </div>
                 </div>
             </div>
         </div>

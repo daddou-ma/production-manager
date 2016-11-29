@@ -12,7 +12,7 @@
                     <p> {{ form.content }} </p>
                     <form>
                         <div class="row">
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-addon" id="name">Fournisseur 
                                         <span class="text-danger">( * )</span> : 
@@ -25,7 +25,7 @@
                                 </div><br>
                                 <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span><br/>
                             </div>
-                            <div class="col-sm-7">
+                            <div class="col-sm-5">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-addon" id="nrc">Date de recevoir <span class="text-danger">( * )</span> : </span>
                                     <select v-model="command.day" class="form-control"aria-describedby="name" v-validate data-rules="required" name="product">
@@ -45,6 +45,12 @@
                                         {{ year.name }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Taux Achat : </span>
+                                    <span class="input-group-addon">{{ command.total_price }} DA</span>
                                 </div>
                             </div>
                         </div>

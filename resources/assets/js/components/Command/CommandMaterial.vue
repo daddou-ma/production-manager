@@ -74,11 +74,6 @@
                     </div>
                 </div>
                 <hr>
-                <div v-if="material">
-                    <b>Matiere : </b>{{ material.name }}<br>
-                    <b>Quantite Disponible: </b>{{ material.quantity }}<br>
-                    <b>Prix Unitaire : </b>{{ material.unite_price }}<br>
-                </div>
             </div>
             <div class="col-md-5">
                 <div class="list-group">
@@ -89,10 +84,10 @@
                             <a class="btn" v-on:click="destroy(material)">Supprimer</a> 
                         </small>
                         <div class="row">
-                            <div class="col-md-6">Prix.U : {{ material.pivot.unite_price }} DA</div>
-                            <div class="col-md-6">Quantite : {{ material.pivot.quantity }} DA</div>
-                            <div class="col-md-6">T.Achat : {{ material.pivot.taux_achat }} DA</div>
-                            <div class="col-md-6">Prix Calulee : {{ material.pivot.calculed_price }} DA</div>
+                            <div class="col-md-6"><b>Prix.U : </b> {{ material.pivot.unite_price }} DA</div>
+                            <div class="col-md-6"><b>Quantite : </b{{>{{ material.pivot.quantity }} DA</div>
+                            <div class="col-md-6"><b>T.Achat : </b{{>{{ material.pivot.taux_achat }} DA</div>
+                            <div class="col-md-6"><b>Prix Calulee : </b{{>{{ material.pivot.calculed_price }} DA</div>
                         </div>
                     </li>
                 </div>
@@ -173,7 +168,7 @@
         		}
         		//this.materials.push(this.material)
                 this.$emit('add', this.material)
-        		this.material.pivot = {}
+        		//this.material.pivot = {}
         	},
             destroy($material) {
                 //delete this.materials[this.materials.indexOf($material)]

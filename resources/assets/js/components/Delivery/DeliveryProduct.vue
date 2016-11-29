@@ -5,7 +5,6 @@
 	        	<span class="label label-default">{{ product.id }}</span>
 				{{ product.name }}<br>
 				<small>
-					<a href="#">modifier</a>
 					<a class="btn" v-on:click="destroy(product)">Supprimer</a> 
 				</small>
                 <div class="pull-right">
@@ -15,19 +14,23 @@
 	        </li>
 	    </div>
 	    <div class="input-group input-group-sm">
+            <span class="input-group-addon">Produit : </span>
 	    	<select class="form-control" v-model="product" aria-describedby="name" v-validate data-rules="required" name="product" placeholder="Product">
                 <option v-for="product in productsList" v-bind:value="product">
                 {{ product.name }}
                 </option>
             </select>
             <span class="input-group-btn"></span>
+            <span class="input-group-addon">Quantite : </span>
             <input type="number" class="form-control" placeholder="quantity" v-model="quantity">
-            <span class="input-group-addon">kg</span>
-           	<span class="input-group-btn"></span>
+            <span class="input-group-addon">kg</span>		    
+	    </div><br>
+        <div class="input-group input-group-sm">
+	    	<span class="input-group-addon">Prix Unitaire :</span>
 		    <input type="number" class="form-control" placeholder="price" v-model="unite_price">
             <span class="input-group-addon">DA</span>
             <span class="input-group-addon">Total : 
-                {{ quantity * unite_price }} DA
+                {{ price }} DA
             </span>
 	    	<span class="input-group-btn">
 		        <button class="btn btn-success" type="button" v-on:click="add()">Ajouter!</button>
@@ -63,6 +66,11 @@
         watch: {
             products: function () {
                 this.productsList = this.productsTemp.filter(this.isAdded)
+            }
+        },
+        computed: {
+            price: function () {
+                return this.quantity * this.unite_price
             }
         },
         methods: {
