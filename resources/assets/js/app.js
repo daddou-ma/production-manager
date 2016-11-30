@@ -51,6 +51,7 @@ const MaterialForm = require('./components/Material/MaterialForm.vue');
 
 const Fabrication = require('./components/Fabrication/Fabrication.vue');
 const FabricationForm = require('./components/Fabrication/FabricationForm.vue');
+const FabricationPrint = require('./components/Fabrication/FabricationPrint.vue');
 
 const Command = require('./components/Command/Command.vue');
 const CommandForm = require('./components/Command/CommandForm.vue');
@@ -88,6 +89,7 @@ Vue.component('material-form', MaterialForm);
 
 Vue.component('fabrication', Fabrication);
 Vue.component('fabrication-form', FabricationForm);
+Vue.component('fabrication-print', FabricationPrint);
 
 Vue.component('command', Command);
 Vue.component('command-form', CommandForm);

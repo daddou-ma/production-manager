@@ -71,7 +71,7 @@ class DeliveryController extends Controller
         $delivery->products()->attach($ids);
         $delivery->count_products = $delivery->products()->count();
         $delivery->total_notax = $total_nt;
-        $delivery->total_price = $delivery->total_notax + ($delivery->total_notax * $delivery->taux_douane);
+        $delivery->total_price = $delivery->total_notax + ($delivery->total_notax * $delivery->taux_douane / 100);
         $delivery->save();
 
         return $delivery->toJson();

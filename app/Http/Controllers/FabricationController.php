@@ -22,7 +22,7 @@ class FabricationController extends Controller
     public function index()
     {
         // get all fabrications
-        $fabrications = Fabrication::with(['product'])->ordered(true)->get();
+        $fabrications = Fabrication::with(['product.materials'])->ordered(true)->get();
 
         // return fabrications as json
         return $fabrications->toJson();

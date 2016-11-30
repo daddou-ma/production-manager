@@ -59,4 +59,8 @@ class ClientRequest extends FormRequest
             'full_name.unique' => 'Le nom d\'un client doit etre unique !',
         ];
     }
+    public function response(array $errors){
+        $client = Client::find(1);
+        return response()->json($errors, 422);
+    }
 }

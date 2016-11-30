@@ -59,4 +59,7 @@ class ProviderRequest extends FormRequest
             'full_name.unique' => 'Le nom d\'un provider doit etre unique !',
         ];
     }
+    public function response(array $errors){
+        return response()->json($errors, 422);
+    }
 }

@@ -46,21 +46,44 @@
                     </form>
                 </div>
                 <div class="tab-pane section" id="material">
-                    <product-material :materials="product.materials"></product-material>
+                    <product-material :materials="product.materials" v-on:destroy="deleteMaterial"></product-material>
                 </div>
                 <div class="tab-pane section" id="fabrication">
                     <div v-for="fabrication in product.fabrications" class="panel panel-default">
                         <div class="panel-body">
-                            <span class="label label-default">{{ fabrication.id }}</span>
-                            <span>{{ fabrication.quantity }}</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Fabrication : </b> <span class="label label-primary"> {{ fabrication.id }} </span> 
+                                    </span><br>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Quantite: </b> {{ fabrication.quantity }}
+                                    </span><br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane section" id="delivery">
                     <div v-for="delivery in product.deliveries" class="panel panel-default">
                         <div class="panel-body">
-                            <span class="label label-default">{{ delivery.id }}</span>
-                            <span>{{ delivery.client.full_name }}</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Livraison : </b> <span class="label label-primary"> {{ delivery.id }} </span> 
+                                    </span><br>
+                                    <span class="">
+                                        <b>Mantant TTC : </b> {{ delivery.total_price }} DA
+                                    </span><br>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Date : </b> {{ delivery.delivery_date }}
+                                    </span><br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,6 +105,17 @@
         props: ['form','product'],
         mounted() {
             console.log('ProductForm Component ready.')
+        },
+        methods: {
+            deleteMaterial($material) {
+                this.product.materials = this.product.materials.filter(function($element) {
+                    if ($element.id == $material.id)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+            }
         }
     }
 </script>

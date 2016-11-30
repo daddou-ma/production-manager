@@ -52,7 +52,7 @@
                             <span class="input-group-addon" id="nrc">
                             <span class="glyphicon glyphicon-th" aria-hidden="true"></span> Quantite :</span>
                             <input type="number" class="form-control" v-model="fabrication.quantity" aria-describedby="nif" min="0" placeholder="Quantite en kg">
-                            <span class="input-group-addon"> kg</span>
+                            <span class="input-group-addon"> 1000 kg</span>
                         </div><br/>
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon" id="nrc">

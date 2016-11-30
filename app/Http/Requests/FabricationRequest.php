@@ -58,4 +58,7 @@ class FabricationRequest extends FormRequest
             'product_id.required' => 'Le fabrication doit avoir un produit !',
         ];
     }
+    public function response(array $errors){
+        return response()->json($errors, 422);
+    }
 }

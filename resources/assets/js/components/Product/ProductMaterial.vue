@@ -1,16 +1,22 @@
 <template>
 	<div>
-		<div class="list-group">
-	        <li href="#" class="list-group-item" v-for="material in materials">
-	        	<span class="label label-default">{{ material.id }}</span>
-				{{ material.name }}<br>
-				<small>
-					<a href="#">modifier</a>
-					<a href="#">Supprimer</a> 
-				</small>
-				<span class="label label-primary pull-right">{{ material.pivot.quantity }} kg</span>
-	        </li>
-	    </div>
+        <div v-for="material in materials" class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="">
+                            <b>Matiere : </b> {{ material.name }} 
+                        </span><br>
+                        <small><a class="btn" v-on:click="destroy(material)">Supprimer</a></small>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="">
+                            <b>Quantite: </b> {{ material.pivot.quantity }}
+                        </span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
 	    <div class="input-group input-group-sm">
 	    	<select class="form-control" v-model="material" aria-describedby="name" v-validate data-rules="required" name="product">
                 <option v-for="material in materialList" v-bind:value="material">
@@ -52,7 +58,15 @@
         		}
         		this.materials.push(this.material)
         		this.material = {}
-        	}
+        	},
+            destroy($material) {
+                //delete this.products[this.products.indexOf($product)]
+                //this.productsList = this.productsTemp.filter(this.isAdded)
+                //this.deletedMaterial = $product
+                //this.products = this.products.filter(this.isDeleted)
+
+                this.$emit('destroy', $material)
+            },
         }
     }
 </script>

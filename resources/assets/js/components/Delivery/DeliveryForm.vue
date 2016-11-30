@@ -58,7 +58,7 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                        <delivery-product v-on:add="addMaterial" v-on:destroy="deleteMaterial":products="delivery.products"></delivery-product>
+                        <delivery-product v-on:add="addMaterial" v-on:destroy="deleteMaterial" :products="delivery.products"></delivery-product>
                     </div>
                 </div>
             </div>

@@ -86,20 +86,21 @@
         </div>
         <div slot="modal-footer" class="modal-footer">
             <button type="button" class="btn btn-sm btn-default" @click="form.cancel()">Fermer</button>
-            <button type="button" class="btn btn-sm" v-bind:class="form.classBtn" @click="form.validate()"> {{ form.validBtn }}</button>
+            <button type="button" :disabled="errors.any()" class="btn btn-sm" v-bind:class="form.classBtn" @click="form.validate()"> {{ form.validBtn }}</button>
         </div>
     </modal>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-            }
-        },
-        props: ['form','client'],
-        mounted() {
-            console.log('ClientForm Component ready.')
+
+export default {
+    data() {
+        return {
         }
+    },
+    props: ['form','client'],
+    mounted() {
+        console.log('ClientForm Component ready.')
     }
+}
 </script>

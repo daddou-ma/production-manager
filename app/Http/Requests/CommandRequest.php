@@ -58,4 +58,7 @@ class CommandRequest extends FormRequest
             'provider_id.required' => 'Le command doit avoir un Fournisseur !',
         ];
     }
+    public function response(array $errors){
+        return response()->json($errors, 422);
+    }
 }

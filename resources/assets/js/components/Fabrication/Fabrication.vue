@@ -1,6 +1,8 @@
 <template>
     <div>
         <fabrication-form v-bind:fabrication="fabrication" v-bind:form="form" v-bind:products="products"></fabrication-form>
+        <fabrication-print v-bind:fabrication="fabrication" v-bind:print="print"></fabrication-print>
+
         <message v-bind:confirm="confirm"></message>
 
         <div class="panel panel-default">
@@ -32,6 +34,7 @@
                         <td>{{ fabrication.embalage }}</td>
                         <td>{{ fabrication.fabrication_date }}</td>
                         <td>
+                            <a class="btn btn-default btn-xs" v-on:click="_print(fabrication)">Imprimer</a>
                             <a class="btn btn-default btn-xs" v-on:click="edit(fabrication)">Modifier</a>
                             <a class="btn btn-danger btn-xs" v-on:click="_delete(fabrication)">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -49,6 +52,13 @@
         data() {
             return {
                 fabrication: {
+                    quantity: '',
+                    fabrication_date: null,
+                    sac: 0,
+                    embalage: 0,
+                    product: {
+                        materials: []
+                    }
                 },
                 products: [],
                 form : {
@@ -73,11 +83,17 @@
                     validate: function () {},
                     cancel: function () {},
                 },
+                print: {
+                    show: false,
+                    validate: function () {},
+                    cancel: function () {},
+                },
                 fabrications: [],
                 apiUrl: 'api/v1',
             }
         },
         mounted() {
+            this.resetFabrication()
             console.log('Fabrication ready.')
             this.$fabrications = this.$resource('/api/v1/fabrications{/id}')
             this.getFabrications()
@@ -114,12 +130,13 @@
             },
             resetFabrication(){
                 this.fabrication = {
-                    name: '',
-                    unite_price: '',
                     quantity: '',
                     fabrication_date: null,
                     sac: 0,
-                    embalage: 0
+                    embalage: 0,
+                    product: {
+                        materials: []
+                    }
                 }
             },
             create() {
@@ -193,6 +210,19 @@
                                 form.show = true
                             }
                         }
+                    },
+                    cancel: function () {
+                        this.show = false
+                    }
+                }
+            },
+            _print($fabrication) {
+                this.fabrication = $fabrication
+                this.print = {
+                    show: true,
+                    validate: function () {
+                        window.print();
+                        console.log("imprimeree");
                     },
                     cancel: function () {
                         this.show = false

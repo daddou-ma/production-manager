@@ -58,4 +58,7 @@ class DeliveryRequest extends FormRequest
             'client_id.required' => 'Le delivery doit avoir un Fournisseur !',
         ];
     }
+    public function response(array $errors){
+        return response()->json($errors, 422);
+    }
 }

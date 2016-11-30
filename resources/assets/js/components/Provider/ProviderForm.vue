@@ -57,10 +57,28 @@
                 <div class="tab-pane section" id="delivery">
                     <div v-for="command in provider.commands" class="panel panel-default">
                         <div class="panel-body">
-                            <span class="label label-default">{{ command.id }}</span>
-                            <li v-for="material in command.materials">
-                                <span>{{ material.name }}</span>
-                            </li>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Numero de facture : </b> 
+                                        <span class="label label-primary"> {{ command.id }} </span>
+                                    </span><br>
+                                    <span class="">
+                                        <b>Date facture : </b> {{ command.created_at }}
+                                    </span><br>
+                                    <span class="">
+                                        <b>Livree le : </b> {{ command.command_date }}
+                                    </span>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Nombre de Materiaux  : </b> {{ command.count_materials}}
+                                    </span><br>
+                                    <span class="">
+                                        <b>Taux Achat : </b> {{ command.total_price}}
+                                    </span><br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

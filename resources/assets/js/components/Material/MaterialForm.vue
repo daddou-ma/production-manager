@@ -37,8 +37,21 @@
                 <div class="tab-pane section" id="command">
                     <div v-for="command in material.commands" class="panel panel-default">
                         <div class="panel-body">
-                            <span class="label label-default">{{ command.id }}</span>
-                            <span>{{ command.provider.full_name }}</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Command : </b> <span class="label label-primary"> {{ command.id }} </span> 
+                                    </span><br>
+                                    <span class="">
+                                        <b>Mantant TTC : </b> {{ command.total_price }} DA
+                                    </span><br>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="">
+                                        <b>Date : </b> {{ command.command_date }}
+                                    </span><br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

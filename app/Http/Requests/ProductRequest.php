@@ -58,4 +58,7 @@ class ProductRequest extends FormRequest
             'name.required' => 'Le product doit avoir un nom !',
         ];
     }
+    public function response(array $errors){
+        return response()->json($errors, 422);
+    }
 }

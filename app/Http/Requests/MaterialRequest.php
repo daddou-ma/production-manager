@@ -59,4 +59,7 @@ class MaterialRequest extends FormRequest
             'name.unique' => 'Le nom d\'un material doit etre unique !',
         ];
     }
+    public function response(array $errors){
+        return response()->json($errors, 422);
+    }
 }
